@@ -2,10 +2,12 @@ import React from "react";
 import { View, StyleSheet } from "react-native";
 import MainRouting from "./MainRouting";
 import BottomContainer from "../BottomContainer/BottomContainer";
+import { StatusBar } from "expo-status-bar";
 
 const MainContainer = () => {
   return (
     <View style={styles.container}>
+      <StatusBar style="light" />
       <MainRouting />
       <BottomContainer />
     </View>

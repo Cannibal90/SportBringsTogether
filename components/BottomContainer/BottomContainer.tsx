@@ -1,11 +1,11 @@
 import React from "react";
-import { View, StyleSheet, Text, Image } from "react-native";
+import { View, StyleSheet, Text, Image, TouchableOpacity } from "react-native";
 import { Link } from "react-router-native";
 
 const BottomContainer = () => {
   return (
     <View style={styles.container}>
-      <Link to={"/startpage"}>
+      <Link component={TouchableOpacity} to={"/startpage"}>
         <View>
           <Image
             style={styles.imageWrapper}
@@ -15,7 +15,7 @@ const BottomContainer = () => {
         </View>
       </Link>
 
-      <Link to={"/search"}>
+      <Link component={TouchableOpacity} to={"/search"}>
         <View>
           <Image
             style={styles.imageWrapper}
@@ -25,7 +25,7 @@ const BottomContainer = () => {
         </View>
       </Link>
 
-      <Link to={"/profile"}>
+      <Link component={TouchableOpacity} to={"/profile"}>
         <View>
           <Image
             style={styles.imageWrapper}

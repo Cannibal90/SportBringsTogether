@@ -1,15 +1,38 @@
-import React from "react";
-import { Text, View, StyleSheet, ImageBackground } from "react-native";
+import React, { useState } from "react";
+import {
+  Text,
+  View,
+  StyleSheet,
+  ImageBackground,
+  TouchableOpacity,
+} from "react-native";
+import EventModal from "../EventModal/EventModal";
 
 const EventCard = (props: { event: any }) => {
+  const [visible, setVisible] = useState<boolean>(false);
+
+  const onModalVisibilityChange = () => {
+    setVisible(!visible);
+  };
+
   return (
     <View style={styles.container}>
-      <ImageBackground source={props.event.link} style={styles.backgroundImage}>
-        <View style={styles.circle}>
-          <Text style={styles.eventText}>{props.event.title}</Text>
-          <Text style={styles.eventText}>{props.event.place}</Text>
-        </View>
-      </ImageBackground>
+      <TouchableOpacity
+        onPress={() => {
+          onModalVisibilityChange();
+        }}
+      >
+        <ImageBackground
+          source={props.event.link}
+          style={styles.backgroundImage}
+        >
+          <View style={styles.circle}>
+            <Text style={styles.eventText}>{props.event.title}</Text>
+            <Text style={styles.eventText}>{props.event.place}</Text>
+          </View>
+        </ImageBackground>
+      </TouchableOpacity>
+      <EventModal visible={visible} onChange={onModalVisibilityChange} />
     </View>
   );
 };

@@ -21,7 +21,6 @@ const Startpage = () => {
       link: require("../../images/football.jpg"),
     },
   ];
-  const tab = [1, 2, 3];
 
   return (
     <View style={styles.container}>

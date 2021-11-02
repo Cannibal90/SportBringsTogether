@@ -17,10 +17,12 @@ const TopContainer = (props: { name: any; link: any; icon: any }) => {
         />
       </Link>
       <Text style={styles.topText}>{props.name}</Text>
-      <Image
-        style={styles.search}
-        source={require("../../images/search_light.png")}
-      />
+      {props.icon && (
+        <Image
+          style={styles.search}
+          source={require("../../images/search_light.png")}
+        />
+      )}
     </LinearGradient>
   );
 };

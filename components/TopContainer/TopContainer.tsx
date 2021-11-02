@@ -18,10 +18,16 @@ const TopContainer = (props: { name: any; link: any; icon: any }) => {
       </Link>
       <Text style={styles.topText}>{props.name}</Text>
       {props.icon && (
-        <Image
-          style={styles.search}
-          source={require("../../images/search_light.png")}
-        />
+        <Link
+          to={"/search"}
+          component={TouchableOpacity}
+          style={[styles.imageLink, styles.searchLink]}
+        >
+          <Image
+            style={styles.search}
+            source={require("../../images/search_light.png")}
+          />
+        </Link>
       )}
     </LinearGradient>
   );
@@ -49,10 +55,11 @@ const styles = StyleSheet.create({
     marginTop: "8%",
   },
   search: {
-    marginTop: "8%",
     width: 40,
     height: 40,
-    marginLeft: "45%",
+  },
+  searchLink: {
+    marginLeft: "53%",
   },
 });
 

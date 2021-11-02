@@ -15,7 +15,7 @@ const BottomContainer = () => {
         </View>
       </Link>
 
-      <Link component={TouchableOpacity} to={"/search"}>
+      <Link component={TouchableOpacity} to={"/map"}>
         <View>
           <Image
             style={styles.imageWrapper}

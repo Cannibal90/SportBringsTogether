@@ -1,5 +1,6 @@
 {
   "expo": {
+    "scheme": "sporty",
     "name": "SportBringsTogether",
     "slug": "SportBringsTogether",
     "version": "1.0.0",

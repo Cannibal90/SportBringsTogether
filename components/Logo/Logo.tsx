@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, View, StyleSheet, Image } from "react-native";
+import { StyleSheet, Image } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 
 const Logo = () => {

@@ -10,6 +10,7 @@ import EventModal from "../EventModal/EventModal";
 
 const EventCard = (props: { event: any }) => {
   const [visible, setVisible] = useState<boolean>(false);
+  const link = require("../../images/running.jpg");
 
   const onModalVisibilityChange = () => {
     setVisible(!visible);
@@ -22,17 +23,22 @@ const EventCard = (props: { event: any }) => {
           onModalVisibilityChange();
         }}
       >
-        <ImageBackground
-          source={props.event.link}
-          style={styles.backgroundImage}
-        >
+        <ImageBackground source={link} style={styles.backgroundImage}>
           <View style={styles.circle}>
-            <Text style={styles.eventText}>{props.event.title}</Text>
-            <Text style={styles.eventText}>{props.event.place}</Text>
+            <Text style={styles.eventText}>
+              {props.event.eventDetails.title}
+            </Text>
+            <Text style={styles.eventText}>
+              {props.event.eventDetails.place}
+            </Text>
           </View>
         </ImageBackground>
       </TouchableOpacity>
-      <EventModal visible={visible} onChange={onModalVisibilityChange} />
+      <EventModal
+        visible={visible}
+        onChange={onModalVisibilityChange}
+        event={props.event}
+      />
     </View>
   );
 };
@@ -61,7 +67,7 @@ const styles = StyleSheet.create({
   eventText: {
     marginLeft: 35,
     color: "#ffffff",
-    fontSize: 10,
+    fontSize: 14,
   },
 });
 

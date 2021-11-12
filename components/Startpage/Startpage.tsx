@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Text, View, StyleSheet } from "react-native";
+import { EventRespone } from "../../models/EventInterfaces";
+import { EventService } from "../../services/EventService";
 import EventCard from "../EventCard/EventCard";
 import Logo from "../Logo/Logo";
 
 const Startpage = () => {
+  const [nearbyEvents, setNearbyEvents] = useState<EventRespone[]>();
   const events = [
     {
       title: "Running",
@@ -22,14 +25,27 @@ const Startpage = () => {
     },
   ];
 
+  const eventService = new EventService();
+
+  const fetchNearbyEvents = () => {
+    eventService.getNearbyEvents().then((response) => {
+      setNearbyEvents(response);
+    });
+  };
+
+  useEffect(() => {
+    fetchNearbyEvents();
+  }, []);
+
   return (
     <View style={styles.container}>
       <Logo />
       <Text style={styles.eventHeadline}>Events in nearbly area</Text>
       <View style={styles.eventCardsContainer}>
-        {events.map((event, index) => {
-          return <EventCard key={index} event={event} />;
-        })}
+        {nearbyEvents &&
+          nearbyEvents.map((event, index) => {
+            return <EventCard key={index} event={event} />;
+          })}
       </View>
     </View>
   );

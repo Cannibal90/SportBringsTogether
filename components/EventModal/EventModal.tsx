@@ -15,11 +15,14 @@ import { TextInput } from "react-native-paper";
 
 const EventModal = (props: { visible: any; onChange: any; event: any }) => {
   const [eventInfo, setEventInfo] = useState<any>({
-    title: "",
-    description: "",
-    startDate: "",
-    maxAttendants: "",
-    place: "",
+    title: props.event.eventDetails.title || "",
+    description: props.event.eventDetails.description || "",
+    startDate: props.event.eventDetails.startDate.toString() || "",
+    endDate: props.event.eventDetails.endDate.toString() || "",
+    lastTimeRegistration:
+      props.event.eventDetails.lastTimeRegistration.toString() || "",
+    maxAttendants: props.event.eventDetails.maxAttendants.toString() || "",
+    place: props.event.eventDetails.place || "",
   });
 
   const handleChange = (item: any, name: any) => {
@@ -58,7 +61,7 @@ const EventModal = (props: { visible: any; onChange: any; event: any }) => {
               <TextInput
                 style={styles.input}
                 label="Description"
-                value={eventInfo.discription}
+                value={eventInfo.description}
                 onChangeText={(text: any) => handleChange(text, "description")}
                 activeUnderlineColor={"#000000"}
               />
@@ -67,6 +70,22 @@ const EventModal = (props: { visible: any; onChange: any; event: any }) => {
                 label="Start date"
                 value={eventInfo.startDate}
                 onChangeText={(text: any) => handleChange(text, "startDate")}
+                activeUnderlineColor={"#000000"}
+              />
+              <TextInput
+                style={styles.input}
+                label="End date"
+                value={eventInfo.endDate}
+                onChangeText={(text: any) => handleChange(text, "endDate")}
+                activeUnderlineColor={"#000000"}
+              />
+              <TextInput
+                style={styles.input}
+                label="Time to register"
+                value={eventInfo.lastTimeRegistration}
+                onChangeText={(text: any) =>
+                  handleChange(text, "lastTimeRegistration")
+                }
                 activeUnderlineColor={"#000000"}
               />
               <TextInput
@@ -142,6 +161,7 @@ const styles = StyleSheet.create({
     textAlign: "left",
   },
   input: {
+    fontWeight: "700",
     backgroundColor: "rgba(255,255,255,0.16)",
     borderRadius: 10,
     width: "100%",

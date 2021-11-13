@@ -26,7 +26,7 @@ const ProfileEvents = () => {
       {yourEvents && !yourEvents.length && (
         <View style={styles.eventCardsContainer}>
           <Text style={styles.eventHeadline}>
-            You are not taking part in any event
+            You haven't created any event
           </Text>
         </View>
       )}

@@ -19,6 +19,7 @@ const EventModal = (props: {
   onChange: any;
   event: any;
   type: any;
+  editable: any;
 }) => {
   const [eventInfo, setEventInfo] = useState<any>({
     title: props.event.eventDetails.title || "",
@@ -32,7 +33,6 @@ const EventModal = (props: {
   });
 
   const handleChange = (item: any, name: any) => {
-    console.log(item);
     setEventInfo({
       ...eventInfo,
       [name]: item,
@@ -63,6 +63,7 @@ const EventModal = (props: {
                 value={eventInfo.title}
                 onChangeText={(text: any) => handleChange(text, "title")}
                 activeUnderlineColor={"#000000"}
+                disabled={props.editable}
               />
               <TextInput
                 style={styles.input}
@@ -70,6 +71,7 @@ const EventModal = (props: {
                 value={eventInfo.description}
                 onChangeText={(text: any) => handleChange(text, "description")}
                 activeUnderlineColor={"#000000"}
+                disabled={props.editable}
               />
               <TextInput
                 style={styles.input}
@@ -77,6 +79,7 @@ const EventModal = (props: {
                 value={eventInfo.startDate}
                 onChangeText={(text: any) => handleChange(text, "startDate")}
                 activeUnderlineColor={"#000000"}
+                disabled={props.editable}
               />
               <TextInput
                 style={styles.input}
@@ -84,6 +87,7 @@ const EventModal = (props: {
                 value={eventInfo.endDate}
                 onChangeText={(text: any) => handleChange(text, "endDate")}
                 activeUnderlineColor={"#000000"}
+                disabled={props.editable}
               />
               <TextInput
                 style={styles.input}
@@ -93,6 +97,7 @@ const EventModal = (props: {
                   handleChange(text, "lastTimeRegistration")
                 }
                 activeUnderlineColor={"#000000"}
+                disabled={props.editable}
               />
               <TextInput
                 style={styles.input}
@@ -102,6 +107,7 @@ const EventModal = (props: {
                   handleChange(text, "maxAttendants")
                 }
                 activeUnderlineColor={"#000000"}
+                disabled={props.editable}
               />
               <TextInput
                 style={styles.input}
@@ -110,6 +116,7 @@ const EventModal = (props: {
                 value={eventInfo.place}
                 onChangeText={(text: any) => handleChange(text, "place")}
                 activeUnderlineColor={"#000000"}
+                disabled={props.editable}
               />
             </ScrollView>
             <View style={styles.buttonContainer}>

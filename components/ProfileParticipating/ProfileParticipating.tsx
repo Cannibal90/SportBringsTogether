@@ -38,7 +38,11 @@ const ProfileParticipating = () => {
             renderItem={({ item, index }) => {
               return (
                 <View style={styles.eventListItemContainer}>
-                  <EventCard event={item} modalType="participating" />
+                  <EventCard
+                    event={item}
+                    modalType="participating"
+                    editable={true}
+                  />
                 </View>
               );
             }}

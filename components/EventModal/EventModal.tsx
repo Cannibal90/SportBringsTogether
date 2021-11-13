@@ -12,8 +12,14 @@ import {
 import { Link } from "react-router-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { TextInput } from "react-native-paper";
+import IconButton from "../IconButton/IconButton";
 
-const EventModal = (props: { visible: any; onChange: any; event: any }) => {
+const EventModal = (props: {
+  visible: any;
+  onChange: any;
+  event: any;
+  type: any;
+}) => {
   const [eventInfo, setEventInfo] = useState<any>({
     title: props.event.eventDetails.title || "",
     description: props.event.eventDetails.description || "",
@@ -107,12 +113,34 @@ const EventModal = (props: { visible: any; onChange: any; event: any }) => {
               />
             </ScrollView>
             <View style={styles.buttonContainer}>
-              <Pressable style={styles.button} onPress={() => props.onChange()}>
-                <Text style={styles.textStyle}>OK</Text>
-              </Pressable>
-              <Link to={"/map/event"} style={styles.button}>
-                <Text style={styles.textStyle}>Go to Map</Text>
-              </Link>
+              {(props.type === "startpage" || props.type === "history") && (
+                <Pressable onPress={() => props.onChange()}>
+                  <IconButton iconName="check-circle" text="OK" />
+                </Pressable>
+              )}
+
+              {props.type === "startpage" && (
+                <Link to={"/map/event"}>
+                  <IconButton iconName="map" text="Go to Map" />
+                </Link>
+              )}
+
+              {props.type === "participating" && (
+                <Pressable onPress={() => props.onChange()}>
+                  <IconButton iconName="trash" text="Discard" />
+                </Pressable>
+              )}
+
+              {props.type === "profile" && (
+                <Pressable onPress={() => props.onChange()}>
+                  <IconButton iconName="edit" text="Edit" />
+                </Pressable>
+              )}
+              {props.type === "profile" && (
+                <Pressable onPress={() => props.onChange()}>
+                  <IconButton iconName="trash" text="Delete" />
+                </Pressable>
+              )}
             </View>
           </LinearGradient>
         </View>
@@ -139,17 +167,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
     flexDirection: "row",
     justifyContent: "center",
-  },
-  button: {
-    borderRadius: 20,
-    padding: 15,
-    marginHorizontal: 10,
-    backgroundColor: "#ffffff",
-  },
-  textStyle: {
-    color: "#000000",
-    fontWeight: "bold",
-    textAlign: "center",
   },
   modalText: {
     marginBottom: 15,

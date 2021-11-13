@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import EventModal from "../EventModal/EventModal";
 
-const EventCard = (props: { event: any }) => {
+const EventCard = (props: { event: any; modalType: any }) => {
   const [visible, setVisible] = useState<boolean>(false);
   const link = require("../../images/running.jpg");
 
@@ -35,6 +35,7 @@ const EventCard = (props: { event: any }) => {
         </ImageBackground>
       </TouchableOpacity>
       <EventModal
+        type={props.modalType}
         visible={visible}
         onChange={onModalVisibilityChange}
         event={props.event}

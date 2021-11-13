@@ -39,7 +39,7 @@ const ProfileEvents = () => {
             renderItem={({ item, index }) => {
               return (
                 <View style={styles.eventListItemContainer}>
-                  <EventCard event={item} />
+                  <EventCard event={item} modalType="profile" />
                 </View>
               );
             }}

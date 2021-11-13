@@ -23,6 +23,7 @@ export interface EventDetails {
 }
 
 export interface EventRespone {
+  id: number;
   latitude: number;
   longitude: number;
   creatorId: number;

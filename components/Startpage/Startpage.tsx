@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Text, View, StyleSheet } from "react-native";
+import { Text, View, StyleSheet, FlatList } from "react-native";
 import { EventRespone } from "../../models/EventInterfaces";
 import { EventService } from "../../services/EventService";
 import EventCard from "../EventCard/EventCard";
@@ -7,23 +7,6 @@ import Logo from "../Logo/Logo";
 
 const Startpage = () => {
   const [nearbyEvents, setNearbyEvents] = useState<EventRespone[]>();
-  const events = [
-    {
-      title: "Running",
-      place: "Lodz, Czajkowskiego 14",
-      link: require("../../images/running.jpg"),
-    },
-    {
-      title: "Volleyball",
-      place: "Lodz, Czajkowskiego 14",
-      link: require("../../images/volleyball.jpg"),
-    },
-    {
-      title: "Football",
-      place: "Lodz, Czajkowskiego 14",
-      link: require("../../images/football.jpg"),
-    },
-  ];
 
   const eventService = new EventService();
 
@@ -40,13 +23,25 @@ const Startpage = () => {
   return (
     <View style={styles.container}>
       <Logo />
-      <Text style={styles.eventHeadline}>Events in nearbly area</Text>
-      <View style={styles.eventCardsContainer}>
-        {nearbyEvents &&
-          nearbyEvents.map((event, index) => {
-            return <EventCard key={index} event={event} />;
-          })}
+      <View style={styles.eventHeadlineContainer}>
+        <Text style={styles.eventHeadline}>Events in nearbly area</Text>
       </View>
+      {nearbyEvents && nearbyEvents.length !== 0 && (
+        <View style={styles.eventListContainer}>
+          <FlatList
+            data={nearbyEvents}
+            keyExtractor={(item) => item.eventDetails.id.toString()}
+            style={{ flex: 1 }}
+            renderItem={({ item, index }) => {
+              return (
+                <View style={styles.eventListItemContainer}>
+                  <EventCard event={item} />
+                </View>
+              );
+            }}
+          />
+        </View>
+      )}
     </View>
   );
 };
@@ -56,13 +51,20 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
   },
-  eventCardsContainer: {
+  eventHeadlineContainer: {
     flexDirection: "column",
     alignItems: "center",
   },
+  eventListItemContainer: {
+    flexDirection: "row",
+    marginTop: 10,
+    justifyContent: "center",
+  },
+  eventListContainer: {
+    height: "55%",
+  },
   eventHeadline: {
     marginTop: 10,
-    marginLeft: "10%",
     fontSize: 30,
     fontWeight: "700",
   },

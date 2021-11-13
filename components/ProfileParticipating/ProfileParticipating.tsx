@@ -23,18 +23,28 @@ const ProfileParticipating = () => {
     <View style={styles.container}>
       <TopContainer name={"Participating"} link={"/profile"} icon={false} />
       {yourEvents && !yourEvents.length && (
-        <View style={styles.eventCardsContainer}>
+        <View style={styles.eventHeadlineContainer}>
           <Text style={styles.eventHeadline}>
             You are not taking part in any event
           </Text>
         </View>
       )}
-      <View style={styles.eventCardsContainer}>
-        {yourEvents &&
-          yourEvents.map((event, index) => {
-            return <EventCard key={index} event={event} />;
-          })}
-      </View>
+      {yourEvents && yourEvents.length !== 0 && (
+        <View style={styles.eventListContainer}>
+          <FlatList
+            data={yourEvents}
+            keyExtractor={(item) => item.eventDetails.id.toString()}
+            style={{ flex: 1 }}
+            renderItem={({ item, index }) => {
+              return (
+                <View style={styles.eventListItemContainer}>
+                  <EventCard event={item} />
+                </View>
+              );
+            }}
+          />
+        </View>
+      )}
     </View>
   );
 };
@@ -43,10 +53,18 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  eventCardsContainer: {
+  eventHeadlineContainer: {
     height: "70%",
     flexDirection: "column",
     alignItems: "center",
+  },
+  eventListItemContainer: {
+    flexDirection: "row",
+    marginTop: 20,
+    justifyContent: "center",
+  },
+  eventListContainer: {
+    height: "70%",
   },
   eventHeadline: {
     marginTop: 10,

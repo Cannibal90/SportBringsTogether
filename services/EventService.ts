@@ -23,6 +23,24 @@ export class EventService extends Service {
     return events;
   }
 
+  async getUserCreatedEvents(id: number): Promise<EventRespone[] | undefined> {
+    let events = await fetch(this.host + "/mine/" + id, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then((response) => {
+      if (response.ok) return response.json();
+      response.text().then((text) => this.handleError(text));
+      return Promise.reject();
+    });
+    // .catch((error) => {
+    //   console.log("Connection failed!");
+    //   return Promise.reject();
+    // });
+    return events;
+  }
+
   async getEventById(id: number): Promise<EventRespone | undefined> {
     let event = await fetch(this.host + "/" + id, {
       method: "GET",

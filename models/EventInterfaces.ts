@@ -20,6 +20,7 @@ export interface EventDetails {
   endDate: Date;
   maxAttendants: number;
   lastTimeRegistration: Date;
+  tags: string;
 }
 
 export interface EventRespone {
@@ -27,5 +28,6 @@ export interface EventRespone {
   latitude: number;
   longitude: number;
   creatorId: number;
+  tags: string[];
   eventDetails: EventDetails;
 }

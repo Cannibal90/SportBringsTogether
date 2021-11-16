@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Text,
   View,
@@ -10,7 +10,7 @@ import EventModal from "../EventModal/EventModal";
 
 const EventCard = (props: { event: any; modalType: any; editable: any }) => {
   const [visible, setVisible] = useState<boolean>(false);
-  const link = require("../../images/running.jpg");
+  const link = require(`../../images/running.jpg`);
 
   const onModalVisibilityChange = () => {
     setVisible(!visible);

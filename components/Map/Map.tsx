@@ -1,30 +1,27 @@
 import React, { useEffect, useRef, useState } from "react";
-import {
-  Text,
-  StyleSheet,
-  View,
-  TouchableOpacity,
-  Alert,
-  ToastAndroid,
-} from "react-native";
+import { StyleSheet, View, TouchableOpacity, ToastAndroid } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
-import { Link } from "react-router-native";
 import { LinearGradient } from "expo-linear-gradient";
 import TopContainer from "../TopContainer/TopContainer";
 import MapView, { Marker, Region } from "react-native-maps";
 import * as Location from "expo-location";
-import { useParams } from "react-router";
+import { EventRespone } from "../../models/EventInterfaces";
+import { EventService } from "../../services/EventService";
+import MapEventLayer from "../MapEventLayer/MapEventLayer";
 
-const Map = () => {
-  //dodac parametry lat i long do url dla MAP
-  //usunac Activity Details i Zastapic to jako Map wysrodkowayant
-  //po przyjeciu lat i long znalezc event i go wysrodkowac i pokazac modala
+const Map = (props: { match: any }) => {
   Location.installWebGeolocationPolyfill();
-  const params = useParams() as any;
   const [mapRef, setMapRef] = useState<any>();
-  const [currentLatitude, setCurrentLatitude] = useState<number>(51.759445);
-  const [currentLongitude, setCurrentLongitude] = useState<number>(19.457216);
+  const [defaultLocation, setDefaultLocation] = useState<any>({
+    latitude: 51.759445,
+    longitude: 19.457216,
+  });
   const [addEvent, setAddEvent] = useState<boolean>(false);
+  const [eventMarkers, setEventMarkers] = useState<EventRespone[]>();
+  const [openLayer, setOpenLayer] = useState<boolean>(false);
+  const [selectedEvent, setSelectedEvent] = useState<any>();
+
+  const eventService = new EventService();
 
   const handleChangeAddEvent = () => {
     setAddEvent(!addEvent);
@@ -38,21 +35,52 @@ const Map = () => {
     }
   };
 
+  const handleShowLayer = () => {
+    setOpenLayer(!openLayer);
+  };
+
+  const handleShowEventDetails = (event: any) => {
+    setSelectedEvent(event);
+    setOpenLayer(true);
+  };
+
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((res) => {
+      const lat = props.match.params.lat
+        ? Number.parseFloat(props.match.params.lat)
+        : res.coords.latitude;
+      const log = props.match.params.lon
+        ? Number.parseFloat(props.match.params.lon)
+        : res.coords.longitude;
+
       const region = {
-        latitude: params.lat ? params.lat : res.coords.latitude,
-        longitude: params.lon ? params.lon : res.coords.longitude,
+        latitude: lat,
+        longitude: log,
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421,
       };
 
       if (mapRef) mapRef.animateToRegion(region);
 
-      setCurrentLatitude(res.coords.latitude);
-      setCurrentLongitude(res.coords.longitude);
+      setDefaultLocation({
+        latitude: lat,
+        longitude: log,
+      });
     });
   }, [mapRef]);
+
+  useEffect(() => {
+    //pobieranie wszystkich w okolicy dla currentLocation
+    eventService.getNearbyEvents().then((response) => {
+      setEventMarkers(response);
+      if (props.match.params.id && response) {
+        setSelectedEvent(
+          response.filter((event) => event.id === props.match.params.id)
+        );
+        setOpenLayer(true);
+      }
+    });
+  }, [props.match]);
 
   return (
     <View style={styles.container}>
@@ -64,8 +92,8 @@ const Map = () => {
           }}
           style={styles.map}
           initialRegion={{
-            latitude: currentLatitude,
-            longitude: currentLongitude,
+            latitude: defaultLocation.latitude,
+            longitude: defaultLocation.longitude,
             latitudeDelta: 0.0922,
             longitudeDelta: 0.0421,
           }}
@@ -73,19 +101,24 @@ const Map = () => {
             handleAddMarker();
           }}
         >
-          <Marker
-            coordinate={{
-              longitude: currentLongitude,
-              latitude: currentLatitude,
-            }}
-            image={require("../../images/marker.png")}
-          />
+          {eventMarkers &&
+            eventMarkers.map((event) => {
+              return (
+                <Marker
+                  key={event.id}
+                  coordinate={{
+                    longitude: event.longitude,
+                    latitude: event.latitude,
+                  }}
+                  image={require("../../images/marker.png")}
+                  onPress={() => {
+                    handleShowEventDetails(event);
+                  }}
+                />
+              );
+            })}
         </MapView>
-        {/* <Link
-          to={"/map/create"}
-          component={TouchableOpacity}
-          style={styles.floatButton}
-        > */}
+
         {!addEvent && (
           <TouchableOpacity
             style={styles.floatButton}
@@ -101,7 +134,12 @@ const Map = () => {
             </LinearGradient>
           </TouchableOpacity>
         )}
-        {/* </Link> */}
+
+        <MapEventLayer
+          visible={openLayer}
+          onChange={handleShowLayer}
+          event={selectedEvent}
+        />
       </View>
     </View>
   );

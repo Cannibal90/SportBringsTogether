@@ -127,7 +127,9 @@ const EventModal = (props: {
               )}
 
               {props.type === "startpage" && (
-                <Link to={"/map/event"}>
+                <Link
+                  to={`/map/${props.event.id}/${props.event.latitude}/${props.event.longitude}`}
+                >
                   <IconButton iconName="map" text="Go to Map" />
                 </Link>
               )}

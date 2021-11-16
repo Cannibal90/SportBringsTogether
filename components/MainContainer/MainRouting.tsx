@@ -17,7 +17,7 @@ const MainRouting = () => {
     <Switch>
       <Route path="/startpage" component={Startpage} />
       <Route path="/map/create" component={CreateEvent} />
-      <Route path="/map/:lat?/:lon?" component={Map} />
+      <Route path="/map/:id?/:lat?/:lon?" component={Map} />
       <Route path="/search/results" component={SearchResults} />
       <Route path="/search" component={Search} />
       <Route path="/profile/edit" component={ProfileEdit} />

@@ -3,7 +3,6 @@ import { Route, Switch, Redirect } from "react-router-native";
 import Startpage from "../Startpage/Startpage";
 import Search from "../Search/Search";
 import Profile from "../Profile/Profile";
-import ActivityDetails from "../ActivityDetails/ActivityDetails";
 import ProfileEdit from "../ProfileEdit/ProfileEdit";
 import ProfileEvents from "../ProfileEvents/ProfileEvents";
 import ProfileParticipating from "../ProfileParticipating/ProfileParticipating";
@@ -17,9 +16,8 @@ const MainRouting = () => {
   return (
     <Switch>
       <Route path="/startpage" component={Startpage} />
-      <Route path="/map/event" component={ActivityDetails} />
       <Route path="/map/create" component={CreateEvent} />
-      <Route path="/map" component={Map} />
+      <Route path="/map/:lat?/:lon?" component={Map} />
       <Route path="/search/results" component={SearchResults} />
       <Route path="/search" component={Search} />
       <Route path="/profile/edit" component={ProfileEdit} />

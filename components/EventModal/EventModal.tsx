@@ -12,18 +12,27 @@ import {
 import { Link } from "react-router-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { TextInput } from "react-native-paper";
+import IconButton from "../IconButton/IconButton";
 
-const EventModal = (props: { visible: any; onChange: any; event: any }) => {
+const EventModal = (props: {
+  visible: any;
+  onChange: any;
+  event: any;
+  type: any;
+  editable: any;
+}) => {
   const [eventInfo, setEventInfo] = useState<any>({
-    title: "",
-    description: "",
-    startDate: "",
-    maxAttendants: "",
-    place: "",
+    title: props.event.eventDetails.title || "",
+    description: props.event.eventDetails.description || "",
+    startDate: props.event.eventDetails.startDate.toString() || "",
+    endDate: props.event.eventDetails.endDate.toString() || "",
+    lastTimeRegistration:
+      props.event.eventDetails.lastTimeRegistration.toString() || "",
+    maxAttendants: props.event.eventDetails.maxAttendants.toString() || "",
+    place: props.event.eventDetails.place || "",
   });
 
   const handleChange = (item: any, name: any) => {
-    console.log(item);
     setEventInfo({
       ...eventInfo,
       [name]: item,
@@ -54,13 +63,15 @@ const EventModal = (props: { visible: any; onChange: any; event: any }) => {
                 value={eventInfo.title}
                 onChangeText={(text: any) => handleChange(text, "title")}
                 activeUnderlineColor={"#000000"}
+                disabled={props.editable}
               />
               <TextInput
                 style={styles.input}
                 label="Description"
-                value={eventInfo.discription}
+                value={eventInfo.description}
                 onChangeText={(text: any) => handleChange(text, "description")}
                 activeUnderlineColor={"#000000"}
+                disabled={props.editable}
               />
               <TextInput
                 style={styles.input}
@@ -68,6 +79,25 @@ const EventModal = (props: { visible: any; onChange: any; event: any }) => {
                 value={eventInfo.startDate}
                 onChangeText={(text: any) => handleChange(text, "startDate")}
                 activeUnderlineColor={"#000000"}
+                disabled={props.editable}
+              />
+              <TextInput
+                style={styles.input}
+                label="End date"
+                value={eventInfo.endDate}
+                onChangeText={(text: any) => handleChange(text, "endDate")}
+                activeUnderlineColor={"#000000"}
+                disabled={props.editable}
+              />
+              <TextInput
+                style={styles.input}
+                label="Time to register"
+                value={eventInfo.lastTimeRegistration}
+                onChangeText={(text: any) =>
+                  handleChange(text, "lastTimeRegistration")
+                }
+                activeUnderlineColor={"#000000"}
+                disabled={props.editable}
               />
               <TextInput
                 style={styles.input}
@@ -77,6 +107,7 @@ const EventModal = (props: { visible: any; onChange: any; event: any }) => {
                   handleChange(text, "maxAttendants")
                 }
                 activeUnderlineColor={"#000000"}
+                disabled={props.editable}
               />
               <TextInput
                 style={styles.input}
@@ -85,15 +116,38 @@ const EventModal = (props: { visible: any; onChange: any; event: any }) => {
                 value={eventInfo.place}
                 onChangeText={(text: any) => handleChange(text, "place")}
                 activeUnderlineColor={"#000000"}
+                disabled={props.editable}
               />
             </ScrollView>
             <View style={styles.buttonContainer}>
-              <Pressable style={styles.button} onPress={() => props.onChange()}>
-                <Text style={styles.textStyle}>OK</Text>
-              </Pressable>
-              <Link to={"/map/event"} style={styles.button}>
-                <Text style={styles.textStyle}>Go to Map</Text>
-              </Link>
+              {(props.type === "startpage" || props.type === "history") && (
+                <Pressable onPress={() => props.onChange()}>
+                  <IconButton iconName="check-circle" text="OK" />
+                </Pressable>
+              )}
+
+              {props.type === "startpage" && (
+                <Link to={"/map/event"}>
+                  <IconButton iconName="map" text="Go to Map" />
+                </Link>
+              )}
+
+              {props.type === "participating" && (
+                <Pressable onPress={() => props.onChange()}>
+                  <IconButton iconName="trash" text="Discard" />
+                </Pressable>
+              )}
+
+              {props.type === "profile" && (
+                <Pressable onPress={() => props.onChange()}>
+                  <IconButton iconName="edit" text="Edit" />
+                </Pressable>
+              )}
+              {props.type === "profile" && (
+                <Pressable onPress={() => props.onChange()}>
+                  <IconButton iconName="trash" text="Delete" />
+                </Pressable>
+              )}
             </View>
           </LinearGradient>
         </View>
@@ -121,17 +175,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
   },
-  button: {
-    borderRadius: 20,
-    padding: 15,
-    marginHorizontal: 10,
-    backgroundColor: "#ffffff",
-  },
-  textStyle: {
-    color: "#000000",
-    fontWeight: "bold",
-    textAlign: "center",
-  },
   modalText: {
     marginBottom: 15,
     textAlign: "center",
@@ -142,6 +185,7 @@ const styles = StyleSheet.create({
     textAlign: "left",
   },
   input: {
+    fontWeight: "700",
     backgroundColor: "rgba(255,255,255,0.16)",
     borderRadius: 10,
     width: "100%",

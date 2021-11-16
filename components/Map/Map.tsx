@@ -13,9 +13,14 @@ import { LinearGradient } from "expo-linear-gradient";
 import TopContainer from "../TopContainer/TopContainer";
 import MapView, { Marker, Region } from "react-native-maps";
 import * as Location from "expo-location";
+import { useParams } from "react-router";
 
 const Map = () => {
+  //dodac parametry lat i long do url dla MAP
+  //usunac Activity Details i Zastapic to jako Map wysrodkowayant
+  //po przyjeciu lat i long znalezc event i go wysrodkowac i pokazac modala
   Location.installWebGeolocationPolyfill();
+  const params = useParams() as any;
   const [mapRef, setMapRef] = useState<any>();
   const [currentLatitude, setCurrentLatitude] = useState<number>(51.759445);
   const [currentLongitude, setCurrentLongitude] = useState<number>(19.457216);
@@ -36,8 +41,8 @@ const Map = () => {
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((res) => {
       const region = {
-        latitude: res.coords.latitude,
-        longitude: res.coords.longitude,
+        latitude: params.lat ? params.lat : res.coords.latitude,
+        longitude: params.lon ? params.lon : res.coords.longitude,
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421,
       };

@@ -8,44 +8,47 @@ import {
 } from "react-native";
 import EventModal from "../EventModal/EventModal";
 
-const EventCard = (props: { event: any }) => {
+const EventCard = (props: { event: any; modalType: any; editable: any }) => {
   const [visible, setVisible] = useState<boolean>(false);
+  const link = require("../../images/running.jpg");
 
   const onModalVisibilityChange = () => {
     setVisible(!visible);
   };
 
   return (
-    <View style={styles.container}>
+    <View>
       <TouchableOpacity
         onPress={() => {
           onModalVisibilityChange();
         }}
       >
-        <ImageBackground
-          source={props.event.link}
-          style={styles.backgroundImage}
-        >
+        <ImageBackground source={link} style={styles.backgroundImage}>
           <View style={styles.circle}>
-            <Text style={styles.eventText}>{props.event.title}</Text>
-            <Text style={styles.eventText}>{props.event.place}</Text>
+            <Text style={styles.eventText}>
+              {props.event.eventDetails.title}
+            </Text>
+            <Text style={styles.eventText}>
+              {props.event.eventDetails.place}
+            </Text>
           </View>
         </ImageBackground>
       </TouchableOpacity>
-      <EventModal visible={visible} onChange={onModalVisibilityChange} />
+      <EventModal
+        type={props.modalType}
+        visible={visible}
+        onChange={onModalVisibilityChange}
+        event={props.event}
+        editable={props.editable}
+      />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    width: "80%",
-    height: "20%",
-    marginTop: 20,
-  },
   backgroundImage: {
-    width: "100%",
-    height: "100%",
+    width: 330,
+    height: 120,
     borderRadius: 10,
     overflow: "hidden",
   },
@@ -55,13 +58,13 @@ const styles = StyleSheet.create({
     height: "100%",
     borderRadius: 1000,
     backgroundColor:
-      "linear-gradient(73.71deg, rgba(0, 0, 0, 0.8) 29.86%, rgba(0, 0, 0, 0) 115.69%);",
+      "linear-gradient(73.71deg, rgba(0, 0, 0, 0.65) 29.86%, rgba(0, 0, 0, 0) 115.69%);",
     justifyContent: "center",
   },
   eventText: {
     marginLeft: 35,
     color: "#ffffff",
-    fontSize: 10,
+    fontSize: 14,
   },
 });
 

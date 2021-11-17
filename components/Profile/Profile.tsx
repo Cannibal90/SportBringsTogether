@@ -3,7 +3,7 @@ import { Text, StyleSheet, View, TouchableOpacity } from "react-native";
 import { Link } from "react-router-native";
 import TopContainer from "../TopContainer/TopContainer";
 
-const Profile = () => {
+const Profile = (props: { history: any }) => {
   const labels = [
     {
       title: "Edit your profile",
@@ -29,7 +29,12 @@ const Profile = () => {
 
   return (
     <View style={styles.container}>
-      <TopContainer name={"Profile"} link={"/startpage"} icon={false} />
+      <TopContainer
+        name={"Profile"}
+        link={"/startpage"}
+        icon={"sign-out"}
+        history={props.history}
+      />
       <View style={styles.profileContainer}>
         {labels.map((label, index) => {
           return (

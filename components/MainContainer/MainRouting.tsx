@@ -11,10 +11,16 @@ import ProfileTrophies from "../ProfileTrophies/ProfileTrophies";
 import Map from "../Map/Map";
 import SearchResults from "../SearchResults/SearchResults";
 import CreateEvent from "../CreateEvent/CreateEvent";
+import WelcomePage from "../WelcomePage/WelcomePage";
+import LoginPage from "../LoginPage/LoginPage";
+import RegisterPage from "../RegisterPage/RegisterPage";
 
 const MainRouting = () => {
   return (
     <Switch>
+      <Route path="/welcome" component={WelcomePage} />
+      <Route path="/login" component={LoginPage} />
+      <Route path="/register" component={RegisterPage} />
       <Route path="/startpage" component={Startpage} />
       <Route path="/map/create" component={CreateEvent} />
       <Route path="/map/:id?/:lat?/:lon?" component={Map} />
@@ -26,7 +32,7 @@ const MainRouting = () => {
       <Route path="/profile/history" component={ProfileHistory} />
       <Route path="/profile/trophies" component={ProfileTrophies} />
       <Route path="/profile" component={Profile} />
-      <Redirect from="/*" to="/startpage" />
+      <Redirect from="/*" to="/welcome" />
     </Switch>
   );
 };

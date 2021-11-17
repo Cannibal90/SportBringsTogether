@@ -1,9 +1,33 @@
 import React from "react";
-import { Text, StyleSheet, View, Image, TouchableOpacity } from "react-native";
+import {
+  Text,
+  StyleSheet,
+  View,
+  Image,
+  TouchableOpacity,
+  Pressable,
+} from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Link } from "react-router-native";
+import Icon from "react-native-vector-icons/FontAwesome";
+import { store } from "../../store/store";
+import { logOut } from "../../store/actions/LoggedAction";
 
-const TopContainer = (props: { name: any; link: any; icon: any }) => {
+const TopContainer = (props: {
+  name: any;
+  link: any;
+  icon: any;
+  history: any;
+}) => {
+  const handlePush = () => {
+    if (props.icon === "search") {
+      props.history.push("search");
+    } else {
+      store.dispatch(logOut());
+      props.history.push("welcome");
+    }
+  };
+
   return (
     <LinearGradient colors={["#FC8E67", "#FDCC4E"]} style={styles.container}>
       <Link
@@ -18,16 +42,21 @@ const TopContainer = (props: { name: any; link: any; icon: any }) => {
       </Link>
       <Text style={styles.topText}>{props.name}</Text>
       {props.icon && (
-        <Link
-          to={"/search"}
-          component={TouchableOpacity}
-          style={[styles.imageLink, styles.searchLink]}
+        <TouchableOpacity
+          onPress={() => {
+            handlePush();
+          }}
         >
-          <Image
-            style={styles.search}
-            source={require("../../images/search_light.png")}
+          <Icon
+            name={props.icon}
+            size={40}
+            color={"#ffffff"}
+            style={[
+              styles.imageLink,
+              { marginLeft: props.icon === "search" ? "67%" : "63%" },
+            ]}
           />
-        </Link>
+        </TouchableOpacity>
       )}
     </LinearGradient>
   );
@@ -52,14 +81,7 @@ const styles = StyleSheet.create({
     height: 40,
   },
   imageLink: {
-    marginTop: "8%",
-  },
-  search: {
-    width: 40,
-    height: 40,
-  },
-  searchLink: {
-    marginLeft: "53%",
+    marginTop: "11%",
   },
 });
 

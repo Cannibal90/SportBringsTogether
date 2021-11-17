@@ -1,15 +1,25 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, StyleSheet } from "react-native";
 import MainRouting from "./MainRouting";
 import BottomContainer from "../BottomContainer/BottomContainer";
 import { StatusBar } from "expo-status-bar";
+import { store } from "../../store/store";
 
 const MainContainer = () => {
+  const [logged, setLogged] = useState<boolean>(false);
+
+  const unsubscribe = store.subscribe(() => {
+    console.log(store.getState().loggedReducer.logged);
+    setLogged(store.getState().loggedReducer.logged);
+  });
+
+  unsubscribe();
+
   return (
     <View style={styles.container}>
       <StatusBar style="light" />
       <MainRouting />
-      <BottomContainer />
+      {logged && <BottomContainer />}
     </View>
   );
 };

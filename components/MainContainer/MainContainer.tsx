@@ -8,10 +8,12 @@ import { store } from "../../store/store";
 const MainContainer = () => {
   const [logged, setLogged] = useState<boolean>(false);
 
-  store.subscribe(() => {
+  const unsubscribe = store.subscribe(() => {
     console.log(store.getState().loggedReducer.logged);
     setLogged(store.getState().loggedReducer.logged);
   });
+
+  unsubscribe();
 
   return (
     <View style={styles.container}>

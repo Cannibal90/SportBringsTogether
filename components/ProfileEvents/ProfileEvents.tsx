@@ -5,7 +5,7 @@ import { EventService } from "../../services/EventService";
 import EventCard from "../EventCard/EventCard";
 import TopContainer from "../TopContainer/TopContainer";
 
-const ProfileEvents = () => {
+const ProfileEvents = (props: { history: any }) => {
   const [yourEvents, setYourEvents] = useState<EventRespone[]>();
 
   const eventService = new EventService();
@@ -22,7 +22,12 @@ const ProfileEvents = () => {
 
   return (
     <View style={styles.container}>
-      <TopContainer name={"Your events"} link={"/profile"} icon={false} />
+      <TopContainer
+        name={"Your events"}
+        link={"/profile"}
+        icon={false}
+        history={props.history}
+      />
       {yourEvents && !yourEvents.length && (
         <View style={styles.eventHeadlineContainer}>
           <Text style={styles.eventHeadline}>

@@ -3,10 +3,15 @@ import { Text, StyleSheet, View, TouchableOpacity } from "react-native";
 import { Link } from "react-router-native";
 import TopContainer from "../TopContainer/TopContainer";
 
-const Search = () => {
+const Search = (props: { history: any }) => {
   return (
     <View style={styles.container}>
-      <TopContainer name={"Search"} link={"/map"} icon={false} />
+      <TopContainer
+        name={"Search"}
+        link={"/map"}
+        icon={false}
+        history={props.history}
+      />
       <View style={styles.searchContainer}>
         <Link to={"/search/results"} component={TouchableOpacity}>
           <Text>Tu jest search</Text>

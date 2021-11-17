@@ -9,7 +9,7 @@ import { EventRespone } from "../../models/EventInterfaces";
 import { EventService } from "../../services/EventService";
 import MapEventLayer from "../MapEventLayer/MapEventLayer";
 
-const Map = (props: { match: any }) => {
+const Map = (props: { match: any; history: any }) => {
   Location.installWebGeolocationPolyfill();
   const [mapRef, setMapRef] = useState<any>();
   const [defaultLocation, setDefaultLocation] = useState<any>({
@@ -84,7 +84,12 @@ const Map = (props: { match: any }) => {
 
   return (
     <View style={styles.container}>
-      <TopContainer name={"Map"} link={"/startpage"} icon={true} />
+      <TopContainer
+        name={"Map"}
+        link={"/startpage"}
+        icon={"search"}
+        history={props.history}
+      />
       <View style={styles.mapContainer}>
         <MapView
           ref={(map) => {

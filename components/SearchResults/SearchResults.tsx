@@ -2,10 +2,15 @@ import React from "react";
 import { Text, StyleSheet, View } from "react-native";
 import TopContainer from "../TopContainer/TopContainer";
 
-const SearchResults = () => {
+const SearchResults = (props: { history: any }) => {
   return (
     <View style={styles.container}>
-      <TopContainer name={"Search"} link={"/search"} icon={false} />
+      <TopContainer
+        name={"Search"}
+        link={"/search"}
+        icon={false}
+        history={props.history}
+      />
       <Text style={{ marginTop: 200 }}>Tu jest searchResults</Text>
     </View>
   );

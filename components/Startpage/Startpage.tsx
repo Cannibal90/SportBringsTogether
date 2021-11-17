@@ -4,8 +4,10 @@ import { EventRespone } from "../../models/EventInterfaces";
 import { EventService } from "../../services/EventService";
 import EventCard from "../EventCard/EventCard";
 import Logo from "../Logo/Logo";
+import * as Location from "expo-location";
 
 const Startpage = () => {
+  Location.installWebGeolocationPolyfill();
   const [nearbyEvents, setNearbyEvents] = useState<EventRespone[]>();
 
   const eventService = new EventService();
@@ -15,6 +17,16 @@ const Startpage = () => {
       setNearbyEvents(response);
     });
   };
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition((res) => {
+      const lat = res.coords.latitude;
+      const log = res.coords.longitude;
+      console.log(lat);
+      console.log(log);
+      //pobierz wydarzenia dla lat i long
+    });
+  }, []);
 
   useEffect(() => {
     fetchNearbyEvents();

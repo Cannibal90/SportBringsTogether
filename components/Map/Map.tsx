@@ -1,5 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
-import { StyleSheet, View, TouchableOpacity, ToastAndroid } from "react-native";
+import {
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  ToastAndroid,
+  Text,
+} from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { LinearGradient } from "expo-linear-gradient";
 import TopContainer from "../TopContainer/TopContainer";
@@ -44,6 +50,12 @@ const Map = (props: { match: any; history: any }) => {
     setOpenLayer(true);
   };
 
+  const handleSearchNearbyEvents = () => {
+    if (mapRef) {
+      console.log(mapRef.__lastRegion);
+    }
+  };
+
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((res) => {
       const lat = props.match.params.lat
@@ -60,7 +72,10 @@ const Map = (props: { match: any; history: any }) => {
         longitudeDelta: 0.0421,
       };
 
-      if (mapRef) mapRef.animateToRegion(region);
+      if (mapRef) {
+        mapRef.animateToRegion(region);
+        console.log(mapRef.__lastRegion);
+      }
 
       setDefaultLocation({
         latitude: lat,
@@ -125,6 +140,15 @@ const Map = (props: { match: any; history: any }) => {
             })}
         </MapView>
 
+        <TouchableOpacity
+          style={styles.search}
+          onPress={() => {
+            handleSearchNearbyEvents();
+          }}
+        >
+          <Text style={styles.searchButton}>Search events in this region</Text>
+        </TouchableOpacity>
+
         {!addEvent && (
           <TouchableOpacity
             style={styles.floatButton}
@@ -175,6 +199,20 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 10,
     right: 10,
+  },
+  search: {
+    position: "absolute",
+    top: 10,
+  },
+  searchButton: {
+    fontSize: 20,
+    fontWeight: "600",
+    borderRadius: 20,
+    backgroundColor: "rgba(255,255,255,0.9)",
+    height: 40,
+    width: "100%",
+    paddingTop: 4,
+    paddingHorizontal: 10,
   },
 });
 

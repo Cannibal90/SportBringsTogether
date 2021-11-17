@@ -13,7 +13,7 @@ const MainContainer = () => {
     setLogged(store.getState().loggedReducer.logged);
   });
 
-  unsubscribe();
+  // unsubscribe();
 
   return (
     <View style={styles.container}>

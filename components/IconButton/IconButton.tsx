@@ -2,13 +2,13 @@ import React from "react";
 import { Text, View, StyleSheet } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 
-const IconButton = (props: { iconName: any; text: any }) => {
+const IconButton = (props: { iconName: any; text: any; color?: string }) => {
   return (
     <View style={styles.button}>
       <Icon
         name={props.iconName}
         size={30}
-        color={"#797979"}
+        color={props.color ? props.color : "#797979"}
         style={{ marginRight: 5 }}
       />
       <Text style={styles.textStyle}>{props.text}</Text>

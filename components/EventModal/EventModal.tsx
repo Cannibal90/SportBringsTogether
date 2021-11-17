@@ -8,6 +8,7 @@ import {
   View,
   SafeAreaView,
   ScrollView,
+  TouchableOpacity,
 } from "react-native";
 import { Link } from "react-router-native";
 import { LinearGradient } from "expo-linear-gradient";
@@ -128,6 +129,7 @@ const EventModal = (props: {
 
               {props.type === "startpage" && (
                 <Link
+                  component={TouchableOpacity}
                   to={`/map/${props.event.id}/${props.event.latitude}/${props.event.longitude}`}
                 >
                   <IconButton iconName="map" text="Go to Map" />

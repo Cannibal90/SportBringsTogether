@@ -74,9 +74,10 @@ const Map = (props: { match: any; history: any }) => {
     eventService.getNearbyEvents().then((response) => {
       setEventMarkers(response);
       if (props.match.params.id && response) {
-        setSelectedEvent(
-          response.filter((event) => event.id === props.match.params.id)
-        );
+        const res = response.filter(
+          (event) => event.id === Number.parseInt(props.match.params.id)
+        )[0];
+        setSelectedEvent(res);
         setOpenLayer(true);
       }
     });

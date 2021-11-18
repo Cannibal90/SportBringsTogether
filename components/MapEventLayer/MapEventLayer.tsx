@@ -6,12 +6,20 @@ import {
   Text,
   TouchableWithoutFeedback,
   ScrollView,
+  TouchableOpacity,
+  ToastAndroid,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import IconButton from "../IconButton/IconButton";
 import Icon from "react-native-vector-icons/FontAwesome";
+import * as Clipboard from "expo-clipboard";
 
 const MapEventLayer = (props: { visible: any; onChange: any; event: any }) => {
+  const copyIdToClipboard = () => {
+    Clipboard.setString("hello world");
+    ToastAndroid.show("Event ID copied to clipboard!", ToastAndroid.SHORT);
+  };
+
   return (
     <View style={styles.centeredView}>
       <Modal
@@ -117,7 +125,13 @@ const MapEventLayer = (props: { visible: any; onChange: any; event: any }) => {
                   </View>
                 </View>
                 <View style={styles.lastButtonContainer}>
-                  <IconButton iconName="share-alt" text="Share" />
+                  <TouchableOpacity
+                    onPress={() => {
+                      copyIdToClipboard();
+                    }}
+                  >
+                    <IconButton iconName="share-alt" text="Share" />
+                  </TouchableOpacity>
                 </View>
               </ScrollView>
             </LinearGradient>

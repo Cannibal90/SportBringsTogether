@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^12.0.5",
+    "@react-native-clipboard/clipboard": "^1.9.0",
     "expo": "~43.0.0",
     "expo-auth-session": "^3.4.2",
     "expo-linear-gradient": "~10.0.3",
@@ -30,7 +31,8 @@
     "react-redux": "^7.2.6",
     "react-router-native": "^5.2.1",
     "redux": "^4.1.2",
-    "set-value": "^4.0.1"
+    "set-value": "^4.0.1",
+    "expo-clipboard": "~2.0.3"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

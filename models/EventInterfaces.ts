@@ -7,7 +7,7 @@ export interface EventRequest {
   startDate: Date;
   endDate: Date;
   maxAttendants: number;
-  lastTimeRegistration: number;
+  lastTimeRegistration: Date;
   creatorId: number;
 }
 

@@ -57,7 +57,8 @@ const LoginPage = (props: { history: any }) => {
   };
 
   const handleLogin = () => {
-    if (checkValidation() && !checkEmptyFields()) {
+    // && !checkEmptyFields()
+    if (checkValidation()) {
       store.dispatch(logIn({ userToken: "" }));
       props.history.push("/startpage");
     }

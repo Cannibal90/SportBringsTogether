@@ -6,7 +6,7 @@ const BottomContainer = () => {
   return (
     <View style={styles.container}>
       <Link component={TouchableOpacity} to={"/startpage"}>
-        <View>
+        <View style={{ alignItems: "center" }}>
           <Image
             style={styles.imageWrapper}
             source={require("../../images/home.png")}
@@ -16,17 +16,17 @@ const BottomContainer = () => {
       </Link>
 
       <Link component={TouchableOpacity} to={"/map"}>
-        <View>
+        <View style={{ alignItems: "center" }}>
           <Image
             style={styles.imageWrapper}
             source={require("../../images/search.png")}
           />
-          <Text style={styles.iconText}>Search</Text>
+          <Text style={styles.iconText}>Map</Text>
         </View>
       </Link>
 
       <Link component={TouchableOpacity} to={"/profile"}>
-        <View>
+        <View style={{ alignItems: "center" }}>
           <Image
             style={styles.imageWrapper}
             source={require("../../images/profile.png")}

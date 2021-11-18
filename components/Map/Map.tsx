@@ -14,6 +14,7 @@ import * as Location from "expo-location";
 import { EventRespone } from "../../models/EventInterfaces";
 import { EventService } from "../../services/EventService";
 import MapEventLayer from "../MapEventLayer/MapEventLayer";
+import MapCreateEvents from "../MapCreateEvent/MapCreateEvents";
 
 const Map = (props: { match: any; history: any }) => {
   Location.installWebGeolocationPolyfill();
@@ -26,6 +27,9 @@ const Map = (props: { match: any; history: any }) => {
   const [eventMarkers, setEventMarkers] = useState<EventRespone[]>();
   const [openLayer, setOpenLayer] = useState<boolean>(false);
   const [selectedEvent, setSelectedEvent] = useState<any>();
+  const [createLayer, setCreateLayer] = useState<boolean>(false);
+  const [place, setPlace] = useState<string>("");
+  const [coordinate, setCoordinate] = useState<any>();
 
   const eventService = new EventService();
 
@@ -34,15 +38,26 @@ const Map = (props: { match: any; history: any }) => {
     ToastAndroid.show("Choose place to add marker!", ToastAndroid.SHORT);
   };
 
-  const handleAddMarker = () => {
+  const handleAddMarker = (a: any) => {
     if (addEvent) {
-      console.log("TAP");
+      console.log(a);
+      setCoordinate(a);
+      setPlace("PLACE");
+      handleCreateEvent();
       setAddEvent(!addEvent);
     }
   };
 
   const handleShowLayer = () => {
     setOpenLayer(!openLayer);
+  };
+
+  const handleCreateEvent = () => {
+    if (createLayer === true) {
+      setCoordinate({});
+      setPlace("");
+    }
+    setCreateLayer(!createLayer);
   };
 
   const handleShowEventDetails = (event: any) => {
@@ -111,6 +126,7 @@ const Map = (props: { match: any; history: any }) => {
           ref={(map) => {
             setMapRef(map);
           }}
+          provider="google"
           style={styles.map}
           initialRegion={{
             latitude: defaultLocation.latitude,
@@ -118,8 +134,8 @@ const Map = (props: { match: any; history: any }) => {
             latitudeDelta: 0.0922,
             longitudeDelta: 0.0421,
           }}
-          onPress={() => {
-            handleAddMarker();
+          onPress={(e) => {
+            handleAddMarker(e.nativeEvent.coordinate);
           }}
         >
           {eventMarkers &&
@@ -146,7 +162,11 @@ const Map = (props: { match: any; history: any }) => {
             handleSearchNearbyEvents();
           }}
         >
-          <Text style={styles.searchButton}>Search events in this region</Text>
+          {!createLayer && !addEvent && (
+            <Text style={styles.searchButton}>
+              Search events in this region
+            </Text>
+          )}
         </TouchableOpacity>
 
         {!addEvent && (
@@ -169,6 +189,12 @@ const Map = (props: { match: any; history: any }) => {
           visible={openLayer}
           onChange={handleShowLayer}
           event={selectedEvent}
+        />
+        <MapCreateEvents
+          visible={createLayer}
+          onChange={handleCreateEvent}
+          coordinates={coordinate}
+          place={place}
         />
       </View>
     </View>

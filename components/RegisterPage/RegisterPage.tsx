@@ -20,13 +20,13 @@ import {
 
 const RegisterPage = (props: { history: any }) => {
   const [credentials, setCredentials] = useState<any>({
-    firstname: "firstname",
-    lastname: "lastname",
-    email: "email",
-    password: "password",
-    retype: "password",
-    city: "city",
-    dateOfBirth: "10.10.1993",
+    firstname: "",
+    lastname: "",
+    email: "",
+    password: "",
+    retype: "",
+    city: "",
+    dateOfBirth: "",
   });
   const [validationMessages, setValidationMessages] = useState<any>({
     firstname: "",
@@ -69,9 +69,20 @@ const RegisterPage = (props: { history: any }) => {
         validationMessages.dateOfBirth === ""
     );
   };
+  const checkEmptyFields = () => {
+    return Boolean(
+      !credentials.firstname.length ||
+        !credentials.lastname.length ||
+        !credentials.email.length ||
+        !credentials.password.length ||
+        !credentials.retype.length ||
+        !credentials.city.length ||
+        !credentials.dateOfBirth.length
+    );
+  };
 
   const handleRegister = () => {
-    if (checkValidation()) {
+    if (checkValidation() && !checkEmptyFields()) {
       props.history.push("/login");
     }
   };
@@ -168,7 +179,6 @@ const RegisterPage = (props: { history: any }) => {
           </ScrollView>
 
           <TouchableOpacity
-            disabled={!checkValidation()}
             onPress={() => {
               handleRegister();
             }}

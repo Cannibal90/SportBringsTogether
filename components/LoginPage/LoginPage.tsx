@@ -52,8 +52,12 @@ const LoginPage = (props: { history: any }) => {
     );
   };
 
+  const checkEmptyFields = () => {
+    return Boolean(!credentials.email.length || !credentials.password.length);
+  };
+
   const handleLogin = () => {
-    if (checkValidation()) {
+    if (checkValidation() && !checkEmptyFields()) {
       store.dispatch(logIn({ userToken: "" }));
       props.history.push("/startpage");
     }
@@ -100,7 +104,6 @@ const LoginPage = (props: { history: any }) => {
           </ScrollView>
 
           <TouchableOpacity
-            disabled={!checkValidation()}
             onPress={() => {
               handleLogin();
             }}

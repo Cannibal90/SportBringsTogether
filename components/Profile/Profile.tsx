@@ -1,7 +1,14 @@
 import React from "react";
-import { Text, StyleSheet, View, TouchableOpacity } from "react-native";
+import {
+  Text,
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
 import { Link } from "react-router-native";
 import TopContainer from "../TopContainer/TopContainer";
+import Icon from "react-native-vector-icons/FontAwesome";
 
 const Profile = (props: { history: any }) => {
   const labels = [
@@ -35,15 +42,26 @@ const Profile = (props: { history: any }) => {
         icon={"sign-out"}
         history={props.history}
       />
-      <View style={styles.profileContainer}>
+      <ScrollView
+        keyboardShouldPersistTaps="handled"
+        contentContainerStyle={styles.profileContainer}
+      >
         {labels.map((label, index) => {
           return (
             <Link key={index} to={label.link} component={TouchableOpacity}>
-              <Text style={{ margin: 20 }}>{label.title}</Text>
+              <View style={styles.rectangle}>
+                <Text style={styles.rectangleText}>{label.title}</Text>
+                <Icon
+                  name="chevron-right"
+                  size={40}
+                  color="#000000"
+                  style={styles.iconContainer}
+                />
+              </View>
             </Link>
           );
         })}
-      </View>
+      </ScrollView>
     </View>
   );
 };
@@ -51,11 +69,29 @@ const Profile = (props: { history: any }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "rgba(196,196,196,0.28)",
   },
   profileContainer: {
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
+  },
+  rectangle: {
+    width: 350,
+    height: 100,
+    marginVertical: 20,
+    backgroundColor: "#FFFFFF",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  rectangleText: {
+    marginLeft: 20,
+    fontWeight: "700",
+    fontSize: 30,
+  },
+  iconContainer: {
+    marginRight: 15,
   },
 });
 

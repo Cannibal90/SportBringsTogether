@@ -40,6 +40,7 @@ const BottomContainer = () => {
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: "#fff",
     flexDirection: "row",
     height: 60,
     justifyContent: "space-between",

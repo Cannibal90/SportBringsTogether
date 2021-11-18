@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { View, StyleSheet } from "react-native";
+import {
+  View,
+  StyleSheet,
+  SafeAreaView,
+  KeyboardAvoidingView,
+} from "react-native";
 import MainRouting from "./MainRouting";
 import BottomContainer from "../BottomContainer/BottomContainer";
 import { StatusBar } from "expo-status-bar";
@@ -20,7 +25,9 @@ const MainContainer = () => {
     <View style={styles.container}>
       <StatusBar style="light" />
       <MainRouting />
+      {/* <KeyboardAvoidingView behavior={"padding"} style={styles.container}> */}
       {logged && <BottomContainer />}
+      {/* </KeyboardAvoidingView> */}
     </View>
   );
 };

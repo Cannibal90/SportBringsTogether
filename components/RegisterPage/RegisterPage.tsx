@@ -7,32 +7,84 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { TextInput } from "react-native-paper";
+import { HelperText, TextInput } from "react-native-paper";
 import Logo from "../Logo/Logo";
 import IconButton from "../IconButton/IconButton";
 import { store } from "../../store/store";
 import { logIn } from "../../store/actions/LoggedAction";
+import {
+  validateEmail,
+  validateMinThreeSigns,
+  validatePasswords,
+} from "../../validators/validators";
 
 const RegisterPage = (props: { history: any }) => {
   const [credentials, setCredentials] = useState<any>({
-    firstname: "firstname",
-    lastname: "lastname",
-    email: "email",
-    password: "password",
-    retype: "password",
-    city: "city",
-    dateOfBirth: "10.10.1993",
+    firstname: "",
+    lastname: "",
+    email: "",
+    password: "",
+    retype: "",
+    city: "",
+    dateOfBirth: "",
+  });
+  const [validationMessages, setValidationMessages] = useState<any>({
+    firstname: "",
+    lastname: "",
+    email: "",
+    password: "",
+    retype: "",
+    city: "",
+    dateOfBirth: "",
   });
 
   const handleChange = (item: any, name: any) => {
+    let check = validateMinThreeSigns(item);
+
+    if (name === "email") {
+      check = validateEmail(item);
+    } else if (name === "retype") {
+      check = validatePasswords(credentials.password, item);
+    }
+
     setCredentials({
       ...credentials,
       [name]: item,
     });
+
+    setValidationMessages({
+      ...validationMessages,
+      [name]: check,
+    });
+  };
+
+  const checkValidation = () => {
+    return Boolean(
+      validationMessages.firstname === "" &&
+        validationMessages.lastname === "" &&
+        validationMessages.email === "" &&
+        validationMessages.password === "" &&
+        validationMessages.retype === "" &&
+        validationMessages.city === "" &&
+        validationMessages.dateOfBirth === ""
+    );
+  };
+  const checkEmptyFields = () => {
+    return Boolean(
+      !credentials.firstname.length ||
+        !credentials.lastname.length ||
+        !credentials.email.length ||
+        !credentials.password.length ||
+        !credentials.retype.length ||
+        !credentials.city.length ||
+        !credentials.dateOfBirth.length
+    );
   };
 
   const handleRegister = () => {
-    props.history.push("/login");
+    if (checkValidation() && !checkEmptyFields()) {
+      props.history.push("/login");
+    }
   };
 
   return (
@@ -59,6 +111,9 @@ const RegisterPage = (props: { history: any }) => {
               onChangeText={(text: any) => handleChange(text, "firstname")}
               activeUnderlineColor={"#000000"}
             />
+            <HelperText type="error" visible={true} style={styles.errorText}>
+              {validationMessages.firstname}
+            </HelperText>
             <TextInput
               style={styles.input}
               label="Lastname"
@@ -66,6 +121,9 @@ const RegisterPage = (props: { history: any }) => {
               onChangeText={(text: any) => handleChange(text, "lastname")}
               activeUnderlineColor={"#000000"}
             />
+            <HelperText type="error" visible={true} style={styles.errorText}>
+              {validationMessages.lastname}
+            </HelperText>
             <TextInput
               style={styles.input}
               label="Email"
@@ -73,6 +131,9 @@ const RegisterPage = (props: { history: any }) => {
               onChangeText={(text: any) => handleChange(text, "email")}
               activeUnderlineColor={"#000000"}
             />
+            <HelperText type="error" visible={true} style={styles.errorText}>
+              {validationMessages.email}
+            </HelperText>
             <TextInput
               style={styles.input}
               label="Password"
@@ -81,6 +142,9 @@ const RegisterPage = (props: { history: any }) => {
               activeUnderlineColor={"#000000"}
               secureTextEntry={true}
             />
+            <HelperText type="error" visible={true} style={styles.errorText}>
+              {validationMessages.password}
+            </HelperText>
             <TextInput
               style={styles.input}
               label="Retype password"
@@ -89,6 +153,9 @@ const RegisterPage = (props: { history: any }) => {
               activeUnderlineColor={"#000000"}
               secureTextEntry={true}
             />
+            <HelperText type="error" visible={true} style={styles.errorText}>
+              {validationMessages.retype}
+            </HelperText>
             <TextInput
               style={styles.input}
               label="City"
@@ -96,6 +163,9 @@ const RegisterPage = (props: { history: any }) => {
               onChangeText={(text: any) => handleChange(text, "city")}
               activeUnderlineColor={"#000000"}
             />
+            <HelperText type="error" visible={true} style={styles.errorText}>
+              {validationMessages.city}
+            </HelperText>
             <TextInput
               style={styles.input}
               label="Date of birth"
@@ -103,6 +173,9 @@ const RegisterPage = (props: { history: any }) => {
               onChangeText={(text: any) => handleChange(text, "dateOfBirth")}
               activeUnderlineColor={"#000000"}
             />
+            <HelperText type="error" visible={true} style={styles.errorText}>
+              {validationMessages.dateOfBirth}
+            </HelperText>
           </ScrollView>
 
           <TouchableOpacity
@@ -168,7 +241,7 @@ const styles = StyleSheet.create({
   modalView: {
     margin: 20,
     width: "85%",
-    height: 400,
+    height: 370,
     borderRadius: 20,
     padding: 35,
   },
@@ -182,7 +255,12 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(255,255,255,0.16)",
     borderRadius: 10,
     width: "100%",
-    marginBottom: 10,
+  },
+  errorText: {
+    width: "100%",
+    paddingLeft: 0,
+    textAlign: "left",
+    // marginBottom: 10,
   },
 });
 

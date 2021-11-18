@@ -8,12 +8,13 @@ import { store } from "../../store/store";
 const MainContainer = () => {
   const [logged, setLogged] = useState<boolean>(false);
 
-  const unsubscribe = store.subscribe(() => {
-    console.log(store.getState().loggedReducer.logged);
-    setLogged(store.getState().loggedReducer.logged);
-  });
-
-  // unsubscribe();
+  useEffect(() => {
+    const unsubscribe = store.subscribe(() => {
+      console.log(store.getState().loggedReducer.logged);
+      setLogged(store.getState().loggedReducer.logged);
+    });
+    return unsubscribe;
+  }, []);
 
   return (
     <View style={styles.container}>

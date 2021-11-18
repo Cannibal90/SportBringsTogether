@@ -5,30 +5,58 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  ToastAndroid,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { TextInput } from "react-native-paper";
+import { HelperText, TextInput } from "react-native-paper";
 import Logo from "../Logo/Logo";
 import IconButton from "../IconButton/IconButton";
 import { store } from "../../store/store";
 import { logIn } from "../../store/actions/LoggedAction";
+import {
+  validateEmail,
+  validateMinThreeSigns,
+} from "../../validators/validators";
 
 const LoginPage = (props: { history: any }) => {
   const [credentials, setCredentials] = useState<any>({
-    email: "email",
-    password: "password",
+    email: "",
+    password: "",
+  });
+  const [validationMessages, setValidationMessages] = useState<any>({
+    email: "",
+    password: "",
   });
 
   const handleChange = (item: any, name: any) => {
+    let check = validateMinThreeSigns(item);
+
+    if (name === "email") {
+      check = validateEmail(item);
+    }
+
     setCredentials({
       ...credentials,
       [name]: item,
     });
+
+    setValidationMessages({
+      ...validationMessages,
+      [name]: check,
+    });
+  };
+
+  const checkValidation = () => {
+    return Boolean(
+      validationMessages.email === "" && validationMessages.password === ""
+    );
   };
 
   const handleLogin = () => {
-    store.dispatch(logIn({ userToken: "" }));
-    props.history.push("/startpage");
+    if (checkValidation()) {
+      store.dispatch(logIn({ userToken: "" }));
+      props.history.push("/startpage");
+    }
   };
 
   return (
@@ -55,6 +83,9 @@ const LoginPage = (props: { history: any }) => {
               onChangeText={(text: any) => handleChange(text, "email")}
               activeUnderlineColor={"#000000"}
             />
+            <HelperText type="error" visible={true} style={styles.errorText}>
+              {validationMessages.email}
+            </HelperText>
             <TextInput
               style={styles.input}
               label="Password"
@@ -63,9 +94,13 @@ const LoginPage = (props: { history: any }) => {
               activeUnderlineColor={"#000000"}
               secureTextEntry={true}
             />
+            <HelperText type="error" visible={true} style={styles.errorText}>
+              {validationMessages.password}
+            </HelperText>
           </ScrollView>
 
           <TouchableOpacity
+            disabled={!checkValidation()}
             onPress={() => {
               handleLogin();
             }}
@@ -128,7 +163,7 @@ const styles = StyleSheet.create({
   modalView: {
     margin: 20,
     width: "85%",
-    height: 300,
+    height: 330,
     borderRadius: 20,
     padding: 35,
   },
@@ -142,6 +177,11 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(255,255,255,0.16)",
     borderRadius: 10,
     width: "100%",
+  },
+  errorText: {
+    width: "100%",
+    paddingLeft: 0,
+    textAlign: "left",
     marginBottom: 10,
   },
 });

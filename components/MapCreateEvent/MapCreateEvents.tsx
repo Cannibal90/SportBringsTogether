@@ -6,12 +6,15 @@ import {
   Text,
   TouchableWithoutFeedback,
   ScrollView,
+  TouchableOpacity,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import IconButton from "../IconButton/IconButton";
-import Icon from "react-native-vector-icons/FontAwesome";
+
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { EventRequest } from "../../models/EventInterfaces";
 import { TextInput } from "react-native-paper";
+import moment from "moment";
+import IconButton from "../IconButton/IconButton";
 
 const MapCreateEvents = (props: {
   visible: any;
@@ -31,6 +34,10 @@ const MapCreateEvents = (props: {
     lastTimeRegistration: new Date(),
     creatorId: 0,
   });
+  const [showStartDate, setShowStartDate] = useState<boolean>(false);
+  const [showEndDate, setShowEndDate] = useState<boolean>(false);
+  const [showLastTimeRegistration, setShowLastTimeRegistration] =
+    useState<boolean>(false);
 
   useEffect(() => {
     if (props.coordinates) {
@@ -43,10 +50,28 @@ const MapCreateEvents = (props: {
   }, [props.coordinates]);
 
   const handleChange = (item: any, name: any) => {
+    if (name === "startDate") {
+      handleShowStartDate();
+    } else if (name === "endDate") {
+      handleShowEndDate();
+    } else if (name === "lastTimeRegistration") {
+      handleShowLastTimeRegistration();
+    }
+
     setEvent({
       ...event,
       [name]: item,
     });
+  };
+
+  const handleShowStartDate = () => {
+    setShowStartDate(!showStartDate);
+  };
+  const handleShowEndDate = () => {
+    setShowEndDate(!showEndDate);
+  };
+  const handleShowLastTimeRegistration = () => {
+    setShowLastTimeRegistration(!showLastTimeRegistration);
   };
 
   return (
@@ -84,20 +109,58 @@ const MapCreateEvents = (props: {
                 onChangeText={(text: any) => handleChange(text, "title")}
                 activeUnderlineColor={"#000000"}
               />
-              <TextInput
-                style={styles.input}
-                label="Start date"
-                value={event.startDate.toString()}
-                onChangeText={(text: any) => handleChange(text, "startDate")}
-                activeUnderlineColor={"#000000"}
+              <DateTimePickerModal
+                date={new Date(event.startDate)}
+                isVisible={showStartDate}
+                mode="datetime"
+                onConfirm={(event) => {
+                  handleChange(event, "startDate");
+                }}
+                onCancel={() => {
+                  setShowStartDate(false);
+                }}
               />
-              <TextInput
-                style={styles.input}
-                label="End date"
-                value={event.endDate.toString()}
-                onChangeText={(text: any) => handleChange(text, "endDate")}
-                activeUnderlineColor={"#000000"}
+              <TouchableOpacity
+                style={{ borderRadius: 10, width: "100%" }}
+                onPress={() => {
+                  handleShowStartDate();
+                }}
+              >
+                <TextInput
+                  style={styles.input}
+                  label="Start date"
+                  value={moment(event.startDate).format("YYYY-MM-DD HH:mm")}
+                  activeUnderlineColor={"#000000"}
+                  disabled={true}
+                />
+              </TouchableOpacity>
+
+              <DateTimePickerModal
+                date={new Date(event.endDate)}
+                isVisible={showEndDate}
+                mode="datetime"
+                onConfirm={(event) => {
+                  handleChange(event, "endDate");
+                }}
+                onCancel={() => {
+                  setShowEndDate(false);
+                }}
               />
+              <TouchableOpacity
+                style={{ borderRadius: 10, width: "100%" }}
+                onPress={() => {
+                  handleShowEndDate();
+                }}
+              >
+                <TextInput
+                  style={styles.input}
+                  label="End date"
+                  value={moment(event.endDate).format("YYYY-MM-DD HH:mm")}
+                  activeUnderlineColor={"#000000"}
+                  disabled={true}
+                />
+              </TouchableOpacity>
+
               <TextInput
                 style={styles.input}
                 label="Max attendants"
@@ -107,15 +170,34 @@ const MapCreateEvents = (props: {
                 }
                 activeUnderlineColor={"#000000"}
               />
-              <TextInput
-                style={styles.input}
-                label="Last time to register"
-                value={event.lastTimeRegistration.toString()}
-                onChangeText={(text: any) =>
-                  handleChange(text, "lastTimeRegistration")
-                }
-                activeUnderlineColor={"#000000"}
+
+              <DateTimePickerModal
+                date={new Date(event.lastTimeRegistration)}
+                isVisible={showLastTimeRegistration}
+                mode="datetime"
+                onConfirm={(event) => {
+                  handleChange(event, "lastTimeRegistration");
+                }}
+                onCancel={() => {
+                  setShowLastTimeRegistration(false);
+                }}
               />
+              <TouchableOpacity
+                style={{ borderRadius: 10, width: "100%" }}
+                onPress={() => {
+                  handleShowLastTimeRegistration();
+                }}
+              >
+                <TextInput
+                  style={styles.input}
+                  label="Last Time Registration"
+                  value={moment(event.lastTimeRegistration).format(
+                    "YYYY-MM-DD HH:mm"
+                  )}
+                  activeUnderlineColor={"#000000"}
+                  disabled={true}
+                />
+              </TouchableOpacity>
               <View style={styles.lastButtonContainer}>
                 <IconButton iconName="save" text="Create" />
               </View>

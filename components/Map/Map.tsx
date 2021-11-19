@@ -15,9 +15,12 @@ import { EventRespone } from "../../models/EventInterfaces";
 import { EventService } from "../../services/EventService";
 import MapEventLayer from "../MapEventLayer/MapEventLayer";
 import MapCreateEvents from "../MapCreateEvent/MapCreateEvents";
+import Geocoder from "react-native-geocoding";
+import config from "../../config";
 
 const Map = (props: { match: any; history: any }) => {
   Location.installWebGeolocationPolyfill();
+  Geocoder.init(config.GOOGLE_API_KEY);
   const [mapRef, setMapRef] = useState<any>();
   const [defaultLocation, setDefaultLocation] = useState<any>({
     latitude: 51.759445,
@@ -40,11 +43,21 @@ const Map = (props: { match: any; history: any }) => {
 
   const handleAddMarker = (a: any) => {
     if (addEvent) {
-      console.log(a);
       setCoordinate(a);
-      setPlace("PLACE");
-      handleCreateEvent();
-      setAddEvent(!addEvent);
+      Geocoder.from(a.latitude, a.longitude)
+        .then((response: any) => {
+          setPlace(response.results[1].formatted_address);
+          handleCreateEvent();
+        })
+        .catch((error) => {
+          ToastAndroid.show(
+            "Something goes wrong, try again",
+            ToastAndroid.SHORT
+          );
+        })
+        .finally(() => {
+          setAddEvent(!addEvent);
+        });
     }
   };
 

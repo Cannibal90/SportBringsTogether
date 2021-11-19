@@ -11,6 +11,7 @@
     "@expo/vector-icons": "^12.0.5",
     "@react-native-clipboard/clipboard": "^1.9.0",
     "@react-native-community/datetimepicker": "^3.5.2",
+    "@types/react-native-dotenv": "^0.2.0",
     "expo": "~43.0.0",
     "expo-auth-session": "^3.4.2",
     "expo-clipboard": "~2.0.3",
@@ -24,7 +25,10 @@
     "react": "17.0.2",
     "react-dom": "17.0.1",
     "react-native": "0.66.3",
+    "react-native-dotenv": "^3.3.0",
     "react-native-elements": "^3.4.2",
+    "react-native-fs": "^2.18.0",
+    "react-native-geocoding": "^0.5.0",
     "react-native-linear-gradient": "^2.5.6",
     "react-native-maps": "0.29.3",
     "react-native-modal-datetime-picker": "^13.0.0",
@@ -36,6 +40,7 @@
     "react-redux": "^7.2.6",
     "react-router-native": "^5.2.1",
     "redux": "^4.1.2",
+    "rn-nodeify": "^10.3.0",
     "set-value": "^4.0.1"
   },
   "devDependencies": {

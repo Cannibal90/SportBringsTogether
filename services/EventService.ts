@@ -1,14 +1,17 @@
 import { ToastAndroid } from "react-native";
 import { EventRespone } from "../models/EventInterfaces";
+import { store } from "../store/store";
 import { Service } from "./Service";
 
 export class EventService extends Service {
   host = "http://192.168.1.12:8080/events";
+  token = store.getState().loggedReducer.userToken;
 
   async getNearbyEvents(): Promise<EventRespone[] | undefined> {
     let events = await fetch(this.host + "/last", {
       method: "GET",
       headers: {
+        Authorization: "Bearer " + store.getState().loggedReducer.userToken,
         "Content-Type": "application/json",
       },
     }).then((response) => {
@@ -28,6 +31,7 @@ export class EventService extends Service {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer " + this.token,
       },
     }).then((response) => {
       if (response.ok) return response.json();
@@ -48,6 +52,7 @@ export class EventService extends Service {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer " + this.token,
       },
     }).then((response) => {
       if (response.ok) return response.json();
@@ -66,6 +71,7 @@ export class EventService extends Service {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer " + this.token,
       },
     }).then((response) => {
       if (response.ok) return response.json();
@@ -84,6 +90,7 @@ export class EventService extends Service {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer " + this.token,
       },
     })
       .then((response) => {

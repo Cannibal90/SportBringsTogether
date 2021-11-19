@@ -5,6 +5,7 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  ToastAndroid,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { HelperText, TextInput } from "react-native-paper";
@@ -19,6 +20,7 @@ import {
 } from "../../validators/validators";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import moment from "moment";
+import { UserService } from "../../services/UserService";
 
 const RegisterPage = (props: { history: any }) => {
   const [credentials, setCredentials] = useState<any>({
@@ -40,6 +42,8 @@ const RegisterPage = (props: { history: any }) => {
     dateOfBirth: "",
   });
   const [showDate, setShowDate] = useState<boolean>(false);
+
+  const userService = new UserService();
 
   const handleChange = (item: any, name: any) => {
     let check = validateMinThreeSigns(item);
@@ -75,7 +79,7 @@ const RegisterPage = (props: { history: any }) => {
         validationMessages.password === "" &&
         validationMessages.retype === "" &&
         validationMessages.city === "" &&
-        validationMessages.dateOfBirth === ""
+        validationMessages.dateOfBirth.toString() === ""
     );
   };
   const checkEmptyFields = () => {
@@ -86,13 +90,37 @@ const RegisterPage = (props: { history: any }) => {
         !credentials.password.length ||
         !credentials.retype.length ||
         !credentials.city.length ||
-        !credentials.dateOfBirth.length
+        !credentials.dateOfBirth.toString().length
     );
   };
 
+  const fetchRegister = () => {
+    console.log("WESZŁo");
+    userService
+      .registerUser({
+        firstName: credentials.firstname,
+        lastName: credentials.lastName,
+        email: credentials.email,
+        password: credentials.password,
+        city: credentials.city,
+        dateOfBirth: credentials.dateOfBirth,
+      })
+      .then((response) => {
+        if (response) {
+          ToastAndroid.show("Success", ToastAndroid.SHORT);
+          props.history.push("/login");
+        }
+      })
+      .catch((error) => {
+        ToastAndroid.show("Error: invalid email!", ToastAndroid.SHORT);
+      });
+  };
+
   const handleRegister = () => {
+    console.log(checkValidation());
+    console.log(!checkEmptyFields());
     if (checkValidation() && !checkEmptyFields()) {
-      props.history.push("/login");
+      fetchRegister();
     }
   };
 

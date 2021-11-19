@@ -4,10 +4,12 @@ export const LOG_OUT = "LOG_OUT";
 export interface LoggedState {
   logged: boolean;
   userToken: string;
+  id: number;
 }
 
 export interface LoggedPayload {
   userToken: string;
+  id: number;
 }
 
 interface LogIn {

@@ -17,6 +17,7 @@ import {
   validateEmail,
   validateMinThreeSigns,
 } from "../../validators/validators";
+import { UserService } from "../../services/UserService";
 
 const LoginPage = (props: { history: any }) => {
   const [credentials, setCredentials] = useState<any>({
@@ -27,6 +28,8 @@ const LoginPage = (props: { history: any }) => {
     email: "",
     password: "",
   });
+
+  const userService = new UserService();
 
   const handleChange = (item: any, name: any) => {
     let check = validateMinThreeSigns(item);
@@ -56,11 +59,23 @@ const LoginPage = (props: { history: any }) => {
     return Boolean(!credentials.email.length || !credentials.password.length);
   };
 
+  const fetchLogin = () => {
+    userService
+      .loginUser(credentials)
+      .then((response) => {
+        if (response) {
+          store.dispatch(logIn({ userToken: response.token, id: response.id }));
+          props.history.push("/startpage");
+        }
+      })
+      .catch((error) => {
+        ToastAndroid.show("Wrong credentials!", ToastAndroid.SHORT);
+      });
+  };
+
   const handleLogin = () => {
-    // && !checkEmptyFields()
-    if (checkValidation()) {
-      store.dispatch(logIn({ userToken: "" }));
-      props.history.push("/startpage");
+    if (checkValidation() && !checkEmptyFields()) {
+      fetchLogin();
     }
   };
 

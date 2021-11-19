@@ -14,30 +14,58 @@ import { Link } from "react-router-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { TextInput } from "react-native-paper";
 import IconButton from "../IconButton/IconButton";
-
+import moment from "moment";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { EventRespone } from "../../models/EventInterfaces";
 const EventModal = (props: {
   visible: any;
   onChange: any;
-  event: any;
+  event: EventRespone;
   type: any;
-  editable: any;
 }) => {
   const [eventInfo, setEventInfo] = useState<any>({
     title: props.event.eventDetails.title || "",
     description: props.event.eventDetails.description || "",
-    startDate: props.event.eventDetails.startDate.toString() || "",
-    endDate: props.event.eventDetails.endDate.toString() || "",
+    startDate: new Date(...props.event.eventDetails.startDate) || new Date(),
+    endDate: new Date(...props.event.eventDetails.endDate) || new Date(),
     lastTimeRegistration:
-      props.event.eventDetails.lastTimeRegistration.toString() || "",
-    maxAttendants: props.event.eventDetails.maxAttendants.toString() || "",
+      new Date(...props.event.eventDetails.lastTimeRegistration) || new Date(),
+    maxAttendants: props.event.eventDetails.maxAttendants || "",
     place: props.event.eventDetails.place || "",
   });
+  const [editable, setEditable] = useState<boolean>(false);
+  const [showStartDate, setShowStartDate] = useState<boolean>(false);
+  const [showEndDate, setShowEndDate] = useState<boolean>(false);
+  const [showLastTimeRegistration, setShowLastTimeRegistration] =
+    useState<boolean>(false);
 
   const handleChange = (item: any, name: any) => {
+    if (name === "startDate") {
+      handleShowStartDate();
+    } else if (name === "endDate") {
+      handleShowEndDate();
+    } else if (name === "lastTimeRegistration") {
+      handleShowLastTimeRegistration();
+    }
+
     setEventInfo({
       ...eventInfo,
       [name]: item,
     });
+  };
+
+  const handleEditable = () => {
+    setEditable(!editable);
+  };
+
+  const handleShowStartDate = () => {
+    setShowStartDate(!showStartDate);
+  };
+  const handleShowEndDate = () => {
+    setShowEndDate(!showEndDate);
+  };
+  const handleShowLastTimeRegistration = () => {
+    setShowLastTimeRegistration(!showLastTimeRegistration);
   };
   return (
     <View style={styles.centeredView}>
@@ -64,7 +92,7 @@ const EventModal = (props: {
                 value={eventInfo.title}
                 onChangeText={(text: any) => handleChange(text, "title")}
                 activeUnderlineColor={"#000000"}
-                disabled={props.editable}
+                disabled={!editable}
               />
               <TextInput
                 style={styles.input}
@@ -72,34 +100,91 @@ const EventModal = (props: {
                 value={eventInfo.description}
                 onChangeText={(text: any) => handleChange(text, "description")}
                 activeUnderlineColor={"#000000"}
-                disabled={props.editable}
+                disabled={!editable}
               />
-              <TextInput
-                style={styles.input}
-                label="Start date"
-                value={eventInfo.startDate}
-                onChangeText={(text: any) => handleChange(text, "startDate")}
-                activeUnderlineColor={"#000000"}
-                disabled={props.editable}
+              <DateTimePickerModal
+                date={new Date(eventInfo.startDate)}
+                isVisible={showStartDate && editable}
+                mode="datetime"
+                onConfirm={(event) => {
+                  handleChange(event, "startDate");
+                }}
+                onCancel={() => {
+                  setShowStartDate(false);
+                }}
               />
-              <TextInput
-                style={styles.input}
-                label="End date"
-                value={eventInfo.endDate}
-                onChangeText={(text: any) => handleChange(text, "endDate")}
-                activeUnderlineColor={"#000000"}
-                disabled={props.editable}
+              <TouchableOpacity
+                disabled={!editable}
+                style={{ borderRadius: 10, width: "100%" }}
+                onPress={() => {
+                  handleShowStartDate();
+                }}
+              >
+                <TextInput
+                  style={styles.input}
+                  label="Start date"
+                  value={moment(eventInfo.startDate).format("YYYY-MM-DD HH:mm")}
+                  activeUnderlineColor={"#000000"}
+                  disabled={true}
+                />
+              </TouchableOpacity>
+
+              <DateTimePickerModal
+                date={new Date(eventInfo.endDate)}
+                isVisible={showEndDate && editable}
+                mode="datetime"
+                onConfirm={(event) => {
+                  handleChange(event, "endDate");
+                }}
+                onCancel={() => {
+                  setShowEndDate(false);
+                }}
               />
-              <TextInput
-                style={styles.input}
-                label="Time to register"
-                value={eventInfo.lastTimeRegistration}
-                onChangeText={(text: any) =>
-                  handleChange(text, "lastTimeRegistration")
-                }
-                activeUnderlineColor={"#000000"}
-                disabled={props.editable}
+              <TouchableOpacity
+                disabled={!editable}
+                style={{ borderRadius: 10, width: "100%" }}
+                onPress={() => {
+                  handleShowEndDate();
+                }}
+              >
+                <TextInput
+                  style={styles.input}
+                  label="End date"
+                  value={moment(eventInfo.endDate).format("YYYY-MM-DD HH:mm")}
+                  activeUnderlineColor={"#000000"}
+                  disabled={true}
+                />
+              </TouchableOpacity>
+
+              <DateTimePickerModal
+                date={new Date(eventInfo.lastTimeRegistration)}
+                isVisible={showLastTimeRegistration && editable}
+                mode="datetime"
+                onConfirm={(event) => {
+                  handleChange(event, "lastTimeRegistration");
+                }}
+                onCancel={() => {
+                  setShowLastTimeRegistration(false);
+                }}
               />
+              <TouchableOpacity
+                disabled={!editable}
+                style={{ borderRadius: 10, width: "100%" }}
+                onPress={() => {
+                  handleShowLastTimeRegistration();
+                }}
+              >
+                <TextInput
+                  style={styles.input}
+                  label="Last Time Registration"
+                  value={moment(eventInfo.lastTimeRegistration).format(
+                    "YYYY-MM-DD HH:mm"
+                  )}
+                  activeUnderlineColor={"#000000"}
+                  disabled={true}
+                />
+              </TouchableOpacity>
+
               <TextInput
                 style={styles.input}
                 label="Max attendants"
@@ -108,7 +193,7 @@ const EventModal = (props: {
                   handleChange(text, "maxAttendants")
                 }
                 activeUnderlineColor={"#000000"}
-                disabled={props.editable}
+                disabled={!editable}
               />
               <TextInput
                 style={styles.input}
@@ -117,11 +202,13 @@ const EventModal = (props: {
                 value={eventInfo.place}
                 onChangeText={(text: any) => handleChange(text, "place")}
                 activeUnderlineColor={"#000000"}
-                disabled={props.editable}
+                disabled={!editable}
               />
             </ScrollView>
             <View style={styles.buttonContainer}>
-              {(props.type === "startpage" || props.type === "history") && (
+              {(props.type === "startpage" ||
+                props.type === "history" ||
+                props.type === "profile") && (
                 <Pressable onPress={() => props.onChange()}>
                   <IconButton iconName="check-circle" text="OK" />
                 </Pressable>
@@ -142,9 +229,19 @@ const EventModal = (props: {
                 </Pressable>
               )}
 
-              {props.type === "profile" && (
-                <Pressable onPress={() => props.onChange()}>
+              {props.type === "profile" && !editable && (
+                <Pressable onPress={() => handleEditable()}>
                   <IconButton iconName="edit" text="Edit" />
+                </Pressable>
+              )}
+              {props.type === "profile" && editable && (
+                <Pressable
+                  onPress={() => {
+                    handleEditable();
+                    props.onChange();
+                  }}
+                >
+                  <IconButton iconName="save" text="Save" />
                 </Pressable>
               )}
               {props.type === "profile" && (

@@ -1,6 +1,7 @@
 {
   "expo": {
     "scheme": "sporty",
+    "userInterfaceStyle": "automatic",
     "name": "SportBringsTogether",
     "slug": "SportBringsTogether",
     "version": "1.0.0",

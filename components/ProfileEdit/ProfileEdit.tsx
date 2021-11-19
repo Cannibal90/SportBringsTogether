@@ -14,6 +14,8 @@ import {
   validateEmail,
   validateMinThreeSigns,
 } from "../../validators/validators";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import moment from "moment";
 
 const ProfileEdit = (props: { history: any }) => {
   const [credentials, setCredentials] = useState<any>({
@@ -23,7 +25,7 @@ const ProfileEdit = (props: { history: any }) => {
     password: "",
     retype: "",
     city: "",
-    dateOfBirth: "",
+    dateOfBirth: new Date(),
   });
 
   const [validationMessages, setValidationMessages] = useState<any>({
@@ -35,12 +37,15 @@ const ProfileEdit = (props: { history: any }) => {
     city: "",
     dateOfBirth: "",
   });
+  const [showDate, setShowDate] = useState<boolean>(false);
 
   const handleChange = (item: any, name: any) => {
     let check = validateMinThreeSigns(item);
 
     if (name === "email") {
       check = validateEmail(item);
+    } else if (name === "dateOfBirth") {
+      handleShowDate();
     }
 
     setCredentials({
@@ -52,6 +57,10 @@ const ProfileEdit = (props: { history: any }) => {
       ...validationMessages,
       [name]: check,
     });
+  };
+
+  const handleShowDate = () => {
+    setShowDate(!showDate);
   };
 
   return (
@@ -87,13 +96,35 @@ const ProfileEdit = (props: { history: any }) => {
                 onChangeText={(text: any) => handleChange(text, "lastname")}
                 activeUnderlineColor={"#000000"}
               />
-              <TextInput
+              {showDate && (
+                <DateTimePicker
+                  value={credentials.dateOfBirth || new Date()}
+                  mode="date"
+                  display="default"
+                  onChange={(event: any, selectedDate: any) => {
+                    handleChange(selectedDate, "dateOfBirth");
+                  }}
+                />
+              )}
+              <TouchableOpacity
                 style={styles.input}
-                label="Date of birth"
-                value={credentials.dateOfBirth}
-                onChangeText={(text: any) => handleChange(text, "dateOfBirth")}
-                activeUnderlineColor={"#000000"}
-              />
+                onPress={() => {
+                  handleShowDate();
+                }}
+              >
+                <TextInput
+                  style={{ fontWeight: "700" }}
+                  label="Date of birth"
+                  value={
+                    moment(credentials.dateOfBirth).format("YYYY-MM-DD") ===
+                    moment(new Date()).format("YYYY-MM-DD")
+                      ? ""
+                      : moment(credentials.dateOfBirth).format("YYYY-MM-DD")
+                  }
+                  disabled={true}
+                  activeUnderlineColor={"#000000"}
+                />
+              </TouchableOpacity>
               <TextInput
                 style={styles.input}
                 label="City"

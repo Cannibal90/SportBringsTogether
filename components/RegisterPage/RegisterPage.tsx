@@ -17,6 +17,8 @@ import {
   validateMinThreeSigns,
   validatePasswords,
 } from "../../validators/validators";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import moment from "moment";
 
 const RegisterPage = (props: { history: any }) => {
   const [credentials, setCredentials] = useState<any>({
@@ -26,7 +28,7 @@ const RegisterPage = (props: { history: any }) => {
     password: "",
     retype: "",
     city: "",
-    dateOfBirth: "",
+    dateOfBirth: new Date(),
   });
   const [validationMessages, setValidationMessages] = useState<any>({
     firstname: "",
@@ -37,6 +39,7 @@ const RegisterPage = (props: { history: any }) => {
     city: "",
     dateOfBirth: "",
   });
+  const [showDate, setShowDate] = useState<boolean>(false);
 
   const handleChange = (item: any, name: any) => {
     let check = validateMinThreeSigns(item);
@@ -45,6 +48,8 @@ const RegisterPage = (props: { history: any }) => {
       check = validateEmail(item);
     } else if (name === "retype") {
       check = validatePasswords(credentials.password, item);
+    } else if (name === "dateOfBirth") {
+      handleShowDate();
     }
 
     setCredentials({
@@ -56,6 +61,10 @@ const RegisterPage = (props: { history: any }) => {
       ...validationMessages,
       [name]: check,
     });
+  };
+
+  const handleShowDate = () => {
+    setShowDate(!showDate);
   };
 
   const checkValidation = () => {
@@ -166,13 +175,36 @@ const RegisterPage = (props: { history: any }) => {
             <HelperText type="error" visible={true} style={styles.errorText}>
               {validationMessages.city}
             </HelperText>
-            <TextInput
+
+            {showDate && (
+              <DateTimePicker
+                value={credentials.dateOfBirth || new Date()}
+                mode="date"
+                display="default"
+                onChange={(event: any, selectedDate: any) => {
+                  handleChange(selectedDate, "dateOfBirth");
+                }}
+              />
+            )}
+            <TouchableOpacity
               style={styles.input}
-              label="Date of birth"
-              value={credentials.dateOfBirth}
-              onChangeText={(text: any) => handleChange(text, "dateOfBirth")}
-              activeUnderlineColor={"#000000"}
-            />
+              onPress={() => {
+                handleShowDate();
+              }}
+            >
+              <TextInput
+                style={styles.input}
+                label="Date of birth"
+                value={
+                  moment(credentials.dateOfBirth).format("YYYY-MM-DD") ===
+                  moment(new Date()).format("YYYY-MM-DD")
+                    ? ""
+                    : moment(credentials.dateOfBirth).format("YYYY-MM-DD")
+                }
+                disabled={true}
+                activeUnderlineColor={"#000000"}
+              />
+            </TouchableOpacity>
             <HelperText type="error" visible={true} style={styles.errorText}>
               {validationMessages.dateOfBirth}
             </HelperText>

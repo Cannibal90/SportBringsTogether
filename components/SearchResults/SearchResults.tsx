@@ -31,11 +31,7 @@ const SearchResults = (props: { history: any; location: any }) => {
             renderItem={({ item, index }) => {
               return (
                 <View style={styles.eventListItemContainer}>
-                  <EventCard
-                    event={item}
-                    modalType="startpage"
-                    editable={true}
-                  />
+                  <EventCard event={item} modalType="startpage" />
                 </View>
               );
             }}

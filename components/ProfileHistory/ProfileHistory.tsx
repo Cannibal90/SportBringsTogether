@@ -44,7 +44,7 @@ const ProfileHistory = (props: { history: any }) => {
             renderItem={({ item, index }) => {
               return (
                 <View style={styles.eventListItemContainer}>
-                  <EventCard event={item} modalType="history" editable={true} />
+                  <EventCard event={item} modalType="history" />
                 </View>
               );
             }}

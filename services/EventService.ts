@@ -19,10 +19,6 @@ export class EventService extends Service {
       response.text().then((text) => this.handleError(text));
       return Promise.reject();
     });
-    // .catch((error) => {
-    //   console.log("Connection failed!");
-    //   return Promise.reject();
-    // });
     return events;
   }
 
@@ -38,10 +34,6 @@ export class EventService extends Service {
       response.text().then((text) => this.handleError(text));
       return Promise.reject();
     });
-    // .catch((error) => {
-    //   console.log("Connection failed!");
-    //   return Promise.reject();
-    // });
     return events;
   }
 
@@ -59,10 +51,6 @@ export class EventService extends Service {
       response.text().then((text) => this.handleError(text));
       return Promise.reject();
     });
-    // .catch((error) => {
-    //   console.log("Connection failed!");
-    //   return Promise.reject();
-    // });
     return events;
   }
 
@@ -78,10 +66,6 @@ export class EventService extends Service {
       response.text().then((text) => this.handleError(text));
       return Promise.reject();
     });
-    // .catch((error) => {
-    //   console.log("Connection failed!");
-    //   return Promise.reject();
-    // });
     return events;
   }
 
@@ -92,6 +76,160 @@ export class EventService extends Service {
         "Content-Type": "application/json",
         Authorization: "Bearer " + this.token,
       },
+    })
+      .then((response) => {
+        if (response.ok) return response.json();
+        response.text().then((text) => this.handleError(text));
+        return Promise.reject();
+      })
+      .catch((error) => {
+        console.log("Connection failed!");
+        ToastAndroid.show("Connection failed!", ToastAndroid.SHORT);
+        return Promise.reject();
+      });
+    return event;
+  }
+
+  async getInterestedForEvent(
+    eventId: number,
+    userId: number
+  ): Promise<EventRespone | undefined> {
+    let event = await fetch(
+      this.host + `/interested?idEvent=${eventId}&userId=${userId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + this.token,
+        },
+      }
+    )
+      .then((response) => {
+        if (response.ok) return response.json();
+        response.text().then((text) => this.handleError(text));
+        return Promise.reject();
+      })
+      .catch((error) => {
+        console.log("Connection failed!");
+        ToastAndroid.show("Connection failed!", ToastAndroid.SHORT);
+        return Promise.reject();
+      });
+    return event;
+  }
+
+  async getGoingForEvent(
+    eventId: number,
+    userId: number
+  ): Promise<EventRespone | undefined> {
+    let event = await fetch(
+      this.host + `/going?idEvent=${eventId}&userId=${userId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + this.token,
+        },
+      }
+    )
+      .then((response) => {
+        if (response.ok) return response.json();
+        response.text().then((text) => this.handleError(text));
+        return Promise.reject();
+      })
+      .catch((error) => {
+        console.log("Connection failed!");
+        ToastAndroid.show("Connection failed!", ToastAndroid.SHORT);
+        return Promise.reject();
+      });
+    return event;
+  }
+
+  async deleteInterestedForEvent(
+    eventId: number,
+    userId: number
+  ): Promise<EventRespone | undefined> {
+    let event = await fetch(
+      this.host + `/not-interested?idEvent=${eventId}&userId=${userId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + this.token,
+        },
+      }
+    )
+      .then((response) => {
+        if (response.ok) return response.json();
+        response.text().then((text) => this.handleError(text));
+        return Promise.reject();
+      })
+      .catch((error) => {
+        console.log("Connection failed!");
+        ToastAndroid.show("Connection failed!", ToastAndroid.SHORT);
+        return Promise.reject();
+      });
+    return event;
+  }
+
+  async deleteGoingForEvent(
+    eventId: number,
+    userId: number
+  ): Promise<EventRespone | undefined> {
+    let event = await fetch(
+      this.host + `/not-going?idEvent=${eventId}&userId=${userId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + this.token,
+        },
+      }
+    )
+      .then((response) => {
+        if (response.ok) return response.json();
+        response.text().then((text) => this.handleError(text));
+        return Promise.reject();
+      })
+      .catch((error) => {
+        console.log("Connection failed!");
+        ToastAndroid.show("Connection failed!", ToastAndroid.SHORT);
+        return Promise.reject();
+      });
+    return event;
+  }
+
+  async deleteEventById(eventId: number): Promise<boolean | undefined> {
+    let event = await fetch(this.host + `idEvent=${eventId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + this.token,
+      },
+    })
+      .then((response) => {
+        if (response.ok) return response.json();
+        response.text().then((text) => this.handleError(text));
+        return Promise.reject();
+      })
+      .catch((error) => {
+        console.log("Connection failed!");
+        ToastAndroid.show("Connection failed!", ToastAndroid.SHORT);
+        return Promise.reject();
+      });
+    return event;
+  }
+
+  async updateEventById(
+    eventId: number,
+    newEvent: any
+  ): Promise<boolean | undefined> {
+    let event = await fetch(this.host + `idEvent=${eventId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + this.token,
+      },
+      body: JSON.stringify(newEvent),
     })
       .then((response) => {
         if (response.ok) return response.json();

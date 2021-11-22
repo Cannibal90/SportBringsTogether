@@ -30,4 +30,6 @@ export interface EventRespone {
   creatorId: number;
   tags: string[];
   eventDetails: EventDetails;
+  goingEvents: number[];
+  eventInterestedUsers: number[];
 }

@@ -74,7 +74,7 @@ const Map = (props: { match: any; history: any }) => {
   };
 
   const handleShowEventDetails = (event: any) => {
-    setSelectedEvent(event);
+    setSelectedEvent(event.id);
     setOpenLayer(true);
   };
 
@@ -120,7 +120,7 @@ const Map = (props: { match: any; history: any }) => {
         const res = response.filter(
           (event) => event.id === Number.parseInt(props.match.params.id)
         )[0];
-        setSelectedEvent(res);
+        setSelectedEvent(res.id);
         setOpenLayer(true);
       }
     });
@@ -201,7 +201,7 @@ const Map = (props: { match: any; history: any }) => {
         <MapEventLayer
           visible={openLayer}
           onChange={handleShowLayer}
-          event={selectedEvent}
+          eventId={selectedEvent}
         />
         <MapCreateEvents
           visible={createLayer}

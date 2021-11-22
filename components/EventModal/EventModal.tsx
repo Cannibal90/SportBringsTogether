@@ -20,7 +20,7 @@ import { EventRespone } from "../../models/EventInterfaces";
 const EventModal = (props: {
   visible: any;
   onChange: any;
-  event: EventRespone;
+  event: any;
   type: any;
 }) => {
   const [eventInfo, setEventInfo] = useState<any>({
@@ -46,6 +46,8 @@ const EventModal = (props: {
       handleShowEndDate();
     } else if (name === "lastTimeRegistration") {
       handleShowLastTimeRegistration();
+    } else if (name === "maxAttendants") {
+      item = Number.parseInt(item);
     }
 
     setEventInfo({
@@ -188,7 +190,7 @@ const EventModal = (props: {
               <TextInput
                 style={styles.input}
                 label="Max attendants"
-                value={eventInfo.maxAttendants}
+                value={eventInfo.maxAttendants.toString()}
                 onChangeText={(text: any) =>
                   handleChange(text, "maxAttendants")
                 }

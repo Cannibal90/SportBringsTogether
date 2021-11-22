@@ -147,6 +147,7 @@ const RegisterPage = (props: { history: any }) => {
               value={credentials.firstname}
               onChangeText={(text: any) => handleChange(text, "firstname")}
               activeUnderlineColor={"#000000"}
+              autoCapitalize="none"
             />
             <HelperText type="error" visible={true} style={styles.errorText}>
               {validationMessages.firstname}
@@ -157,6 +158,7 @@ const RegisterPage = (props: { history: any }) => {
               value={credentials.lastname}
               onChangeText={(text: any) => handleChange(text, "lastname")}
               activeUnderlineColor={"#000000"}
+              autoCapitalize="none"
             />
             <HelperText type="error" visible={true} style={styles.errorText}>
               {validationMessages.lastname}
@@ -167,6 +169,7 @@ const RegisterPage = (props: { history: any }) => {
               value={credentials.email}
               onChangeText={(text: any) => handleChange(text, "email")}
               activeUnderlineColor={"#000000"}
+              autoCapitalize="none"
             />
             <HelperText type="error" visible={true} style={styles.errorText}>
               {validationMessages.email}
@@ -178,6 +181,7 @@ const RegisterPage = (props: { history: any }) => {
               onChangeText={(text: any) => handleChange(text, "password")}
               activeUnderlineColor={"#000000"}
               secureTextEntry={true}
+              autoCapitalize="none"
             />
             <HelperText type="error" visible={true} style={styles.errorText}>
               {validationMessages.password}
@@ -189,6 +193,7 @@ const RegisterPage = (props: { history: any }) => {
               onChangeText={(text: any) => handleChange(text, "retype")}
               activeUnderlineColor={"#000000"}
               secureTextEntry={true}
+              autoCapitalize="none"
             />
             <HelperText type="error" visible={true} style={styles.errorText}>
               {validationMessages.retype}
@@ -199,6 +204,7 @@ const RegisterPage = (props: { history: any }) => {
               value={credentials.city}
               onChangeText={(text: any) => handleChange(text, "city")}
               activeUnderlineColor={"#000000"}
+              autoCapitalize="none"
             />
             <HelperText type="error" visible={true} style={styles.errorText}>
               {validationMessages.city}
@@ -231,6 +237,7 @@ const RegisterPage = (props: { history: any }) => {
                 }
                 disabled={true}
                 activeUnderlineColor={"#000000"}
+                autoCapitalize="none"
               />
             </TouchableOpacity>
             <HelperText type="error" visible={true} style={styles.errorText}>

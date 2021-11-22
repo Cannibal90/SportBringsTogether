@@ -102,6 +102,7 @@ const LoginPage = (props: { history: any }) => {
               value={credentials.email}
               onChangeText={(text: any) => handleChange(text, "email")}
               activeUnderlineColor={"#000000"}
+              autoCapitalize="none"
             />
             <HelperText type="error" visible={true} style={styles.errorText}>
               {validationMessages.email}
@@ -113,6 +114,7 @@ const LoginPage = (props: { history: any }) => {
               onChangeText={(text: any) => handleChange(text, "password")}
               activeUnderlineColor={"#000000"}
               secureTextEntry={true}
+              autoCapitalize="none"
             />
             <HelperText type="error" visible={true} style={styles.errorText}>
               {validationMessages.password}

@@ -13,10 +13,56 @@ import { LinearGradient } from "expo-linear-gradient";
 import IconButton from "../IconButton/IconButton";
 import Icon from "react-native-vector-icons/FontAwesome";
 import * as Clipboard from "expo-clipboard";
+import moment from "moment";
+import { store } from "../../store/store";
+import { EventService } from "../../services/EventService";
 
-const MapEventLayer = (props: { visible: any; onChange: any; event: any }) => {
+const MapEventLayer = (props: {
+  visible: any;
+  onChange: any;
+  eventId: any;
+}) => {
+  const userId = store.getState().loggedReducer.id;
+  const [event, setEvent] = useState<any>();
+
+  const eventService = new EventService();
+
+  useEffect(() => {
+    getEventById();
+  }, [props.eventId]);
+
+  const getEventById = () => {
+    eventService.getEventById(props.eventId).then((response) => {
+      setEvent(response);
+    });
+  };
+
+  const getGoing = () => {
+    eventService.getGoingForEvent(event.id, userId).then((response) => {
+      setEvent(response);
+    });
+  };
+
+  const deleteGoing = () => {
+    eventService.deleteGoingForEvent(event.id, userId).then((response) => {
+      setEvent(response);
+    });
+  };
+
+  const getInterested = () => {
+    eventService.getInterestedForEvent(event.id, userId).then((response) => {
+      setEvent(response);
+    });
+  };
+
+  const deleteInterested = () => {
+    eventService.deleteInterestedForEvent(event.id, userId).then((response) => {
+      setEvent(response);
+    });
+  };
+
   const copyIdToClipboard = () => {
-    Clipboard.setString("hello world");
+    Clipboard.setString(props.eventId.toString());
     ToastAndroid.show("Event ID copied to clipboard!", ToastAndroid.SHORT);
   };
 
@@ -30,27 +76,29 @@ const MapEventLayer = (props: { visible: any; onChange: any; event: any }) => {
           props.onChange();
         }}
       >
-        {props.event && (
+        {event && (
           <View style={styles.centeredView}>
             <TouchableWithoutFeedback onPress={props.onChange}>
               <View style={styles.closeContainer}></View>
             </TouchableWithoutFeedback>
             <View style={styles.eventHeadlineContainer}>
               <Text style={styles.eventHeadlineTitleText}>
-                {props.event.eventDetails.title} -{" "}
-                {props.event.eventDetails.place}
+                {event.eventDetails.title}
+              </Text>
+              <Text style={styles.eventHeadlineTitleText}>
+                {event.eventDetails.place}
               </Text>
               <Text style={styles.eventHeadlineTitleText}>
                 Last time to register:{" "}
-                {props.event.eventDetails.lastTimeRegistration}
+                {moment(
+                  new Date(...event.eventDetails.lastTimeRegistration)
+                ).format("YYYY-MM-DD HH:mm")}
               </Text>
 
               <View style={styles.eventHeadlineLatLogContainer}>
+                <Text style={styles.eventHeadlineLatLog}>{event.latitude}</Text>
                 <Text style={styles.eventHeadlineLatLog}>
-                  {props.event.latitude}
-                </Text>
-                <Text style={styles.eventHeadlineLatLog}>
-                  {props.event.longitude}
+                  {event.longitude}
                 </Text>
               </View>
             </View>
@@ -61,20 +109,57 @@ const MapEventLayer = (props: { visible: any; onChange: any; event: any }) => {
             >
               <ScrollView keyboardShouldPersistTaps="handled">
                 <View style={styles.buttonContainer}>
-                  <IconButton
-                    iconName="star"
-                    text="Interested"
-                    // color="#eeff00"
-                  />
-                  <IconButton
-                    iconName="check-square"
-                    text="Going"
-                    // color="#00ff15"
-                  />
+                  {event.eventInterestedUsers.includes(userId) ? (
+                    <TouchableOpacity
+                      onPress={() => {
+                        deleteInterested();
+                      }}
+                      disabled={event.creatorId === userId}
+                    >
+                      <IconButton
+                        iconName="star"
+                        text="Interested"
+                        color="#ddeb1c"
+                      />
+                    </TouchableOpacity>
+                  ) : (
+                    <TouchableOpacity
+                      onPress={() => {
+                        getInterested();
+                      }}
+                      disabled={event.creatorId === userId}
+                    >
+                      <IconButton iconName="star" text="Interested" />
+                    </TouchableOpacity>
+                  )}
+
+                  {event.goingEvents.includes(userId) ? (
+                    <TouchableOpacity
+                      onPress={() => {
+                        deleteGoing();
+                      }}
+                      disabled={event.creatorId === userId}
+                    >
+                      <IconButton
+                        iconName="check-square"
+                        text="Going"
+                        color="#00ff15"
+                      />
+                    </TouchableOpacity>
+                  ) : (
+                    <TouchableOpacity
+                      onPress={() => {
+                        getGoing();
+                      }}
+                      disabled={event.creatorId === userId}
+                    >
+                      <IconButton iconName="check-square" text="Going" />
+                    </TouchableOpacity>
+                  )}
                 </View>
 
                 <Text style={styles.descriptionText}>
-                  {props.event.eventDetails.description}
+                  {event.eventDetails.description}
                 </Text>
 
                 <View style={styles.rectangleContainer}>
@@ -84,13 +169,13 @@ const MapEventLayer = (props: { visible: any; onChange: any; event: any }) => {
                     <Text style={styles.rectangleText}>Durration time</Text>
                     <Icon name="clock-o" size={30} color="#000000" />
                     <Text style={styles.rectangleText}>
-                      {props.event.eventDetails.startDate
-                        .toString()
-                        .substring(11)}
-                      -
-                      {props.event.eventDetails.endDate
-                        .toString()
-                        .substring(11)}
+                      {moment(new Date(...event.eventDetails.startDate)).format(
+                        "HH:mm"
+                      )}{" "}
+                      -{" "}
+                      {moment(new Date(...event.eventDetails.endDate)).format(
+                        "HH:mm"
+                      )}
                     </Text>
                   </View>
                   <View
@@ -99,7 +184,7 @@ const MapEventLayer = (props: { visible: any; onChange: any; event: any }) => {
                     <Text style={styles.rectangleText}>Max attendants</Text>
                     <Icon name="users" size={30} color="#000000" />
                     <Text style={styles.rectangleText}>
-                      {props.event.eventDetails.maxAttendants}
+                      {event.eventDetails.maxAttendants}
                     </Text>
                   </View>
                 </View>
@@ -111,7 +196,7 @@ const MapEventLayer = (props: { visible: any; onChange: any; event: any }) => {
                     <Text style={styles.rectangleText}>Interested</Text>
                     <Icon name="street-view" size={30} color="#000000" />
                     <Text style={styles.rectangleText}>
-                      {props.event.eventDetails.maxAttendants}
+                      {event.eventInterestedUsers.length}
                     </Text>
                   </View>
                   <View
@@ -120,7 +205,7 @@ const MapEventLayer = (props: { visible: any; onChange: any; event: any }) => {
                     <Text style={styles.rectangleText}>Going</Text>
                     <Icon name="check-circle-o" size={30} color="#000000" />
                     <Text style={styles.rectangleText}>
-                      {props.event.eventDetails.maxAttendants}
+                      {event.goingEvents.length}
                     </Text>
                   </View>
                 </View>
@@ -157,7 +242,7 @@ const styles = StyleSheet.create({
     width: "95%",
     height: 100,
     borderRadius: 20,
-    paddingTop: 10,
+    paddingTop: 5,
     paddingLeft: 35,
     backgroundColor: "#f7f7f7",
   },

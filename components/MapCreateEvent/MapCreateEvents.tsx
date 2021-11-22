@@ -15,12 +15,15 @@ import { EventRequest } from "../../models/EventInterfaces";
 import { TextInput } from "react-native-paper";
 import moment from "moment";
 import IconButton from "../IconButton/IconButton";
+import { EventService } from "../../services/EventService";
+import { store } from "../../store/store";
 
 const MapCreateEvents = (props: {
   visible: any;
   onChange: any;
   coordinates: any;
   place: any;
+  handleCreateResponse: any;
 }) => {
   const [event, setEvent] = useState<EventRequest>({
     longitude: 0,
@@ -32,22 +35,26 @@ const MapCreateEvents = (props: {
     endDate: new Date(),
     maxAttendants: 0,
     lastTimeRegistration: new Date(),
-    creatorId: 0,
+    tags: "",
+    creatorId: store.getState().loggedReducer.id || 0,
   });
   const [showStartDate, setShowStartDate] = useState<boolean>(false);
   const [showEndDate, setShowEndDate] = useState<boolean>(false);
   const [showLastTimeRegistration, setShowLastTimeRegistration] =
     useState<boolean>(false);
 
+  const eventService = new EventService();
+
   useEffect(() => {
-    if (props.coordinates) {
+    if (props.coordinates && props.place) {
       setEvent({
         ...event,
         longitude: props.coordinates.longitude,
         latitude: props.coordinates.latitude,
+        place: props.place,
       });
     }
-  }, [props.coordinates]);
+  }, [props.coordinates, props.place]);
 
   const handleChange = (item: any, name: any) => {
     if (name === "startDate") {
@@ -72,6 +79,13 @@ const MapCreateEvents = (props: {
   };
   const handleShowLastTimeRegistration = () => {
     setShowLastTimeRegistration(!showLastTimeRegistration);
+  };
+
+  const handleCreateEvent = () => {
+    console.log(JSON.stringify(event, null, 2));
+    eventService.createEvent(event).then((response) => {
+      if (response) props.handleCreateResponse(response.id);
+    });
   };
 
   return (
@@ -107,6 +121,20 @@ const MapCreateEvents = (props: {
                 label="Title"
                 value={event.title}
                 onChangeText={(text: any) => handleChange(text, "title")}
+                activeUnderlineColor={"#000000"}
+              />
+              <TextInput
+                style={styles.input}
+                label="Description"
+                value={event.description}
+                onChangeText={(text: any) => handleChange(text, "description")}
+                activeUnderlineColor={"#000000"}
+              />
+              <TextInput
+                style={styles.input}
+                label="Tags(split using coma)"
+                value={event.tags}
+                onChangeText={(text: any) => handleChange(text, "tags")}
                 activeUnderlineColor={"#000000"}
               />
               <DateTimePickerModal
@@ -199,7 +227,13 @@ const MapCreateEvents = (props: {
                 />
               </TouchableOpacity>
               <View style={styles.lastButtonContainer}>
-                <IconButton iconName="save" text="Create" />
+                <TouchableOpacity
+                  onPress={() => {
+                    handleCreateEvent();
+                  }}
+                >
+                  <IconButton iconName="save" text="Create" />
+                </TouchableOpacity>
               </View>
             </ScrollView>
           </LinearGradient>

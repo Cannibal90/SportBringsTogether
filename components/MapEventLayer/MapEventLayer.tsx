@@ -32,9 +32,12 @@ const MapEventLayer = (props: {
   }, [props.eventId]);
 
   const getEventById = () => {
-    eventService.getEventById(props.eventId).then((response) => {
-      setEvent(response);
-    });
+    if (props.eventId)
+      eventService
+        .getEventById(Number.parseInt(props.eventId))
+        .then((response) => {
+          setEvent(response);
+        });
   };
 
   const getGoing = () => {

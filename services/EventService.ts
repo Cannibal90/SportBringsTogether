@@ -16,7 +16,7 @@ export class EventService extends Service {
       },
     }).then((response) => {
       if (response.ok) return response.json();
-      response.text().then((text) => this.handleError(text));
+      response.text().then((text) => this.handleError(text, "getNearbyEvents"));
       return Promise.reject();
     });
     return events;
@@ -31,7 +31,9 @@ export class EventService extends Service {
       },
     }).then((response) => {
       if (response.ok) return response.json();
-      response.text().then((text) => this.handleError(text));
+      response
+        .text()
+        .then((text) => this.handleError(text, "getUserCreatedEvents"));
       return Promise.reject();
     });
     return events;
@@ -48,7 +50,9 @@ export class EventService extends Service {
       },
     }).then((response) => {
       if (response.ok) return response.json();
-      response.text().then((text) => this.handleError(text));
+      response
+        .text()
+        .then((text) => this.handleError(text, "getUserParticipatingEvents"));
       return Promise.reject();
     });
     return events;
@@ -63,7 +67,9 @@ export class EventService extends Service {
       },
     }).then((response) => {
       if (response.ok) return response.json();
-      response.text().then((text) => this.handleError(text));
+      response
+        .text()
+        .then((text) => this.handleError(text, "getUserHistoryEvents"));
       return Promise.reject();
     });
     return events;
@@ -76,17 +82,11 @@ export class EventService extends Service {
         "Content-Type": "application/json",
         Authorization: "Bearer " + this.token,
       },
-    })
-      .then((response) => {
-        if (response.ok) return response.json();
-        response.text().then((text) => this.handleError(text));
-        return Promise.reject();
-      })
-      .catch((error) => {
-        console.log("Connection failed!");
-        ToastAndroid.show("Connection failed!", ToastAndroid.SHORT);
-        return Promise.reject();
-      });
+    }).then((response) => {
+      if (response.ok) return response.json();
+      response.text().then((text) => this.handleError(text, "getEventById"));
+      return Promise.reject();
+    });
     return event;
   }
 
@@ -103,17 +103,13 @@ export class EventService extends Service {
           Authorization: "Bearer " + this.token,
         },
       }
-    )
-      .then((response) => {
-        if (response.ok) return response.json();
-        response.text().then((text) => this.handleError(text));
-        return Promise.reject();
-      })
-      .catch((error) => {
-        console.log("Connection failed!");
-        ToastAndroid.show("Connection failed!", ToastAndroid.SHORT);
-        return Promise.reject();
-      });
+    ).then((response) => {
+      if (response.ok) return response.json();
+      response
+        .text()
+        .then((text) => this.handleError(text, "getInterestedForEvent"));
+      return Promise.reject();
+    });
     return event;
   }
 
@@ -130,17 +126,13 @@ export class EventService extends Service {
           Authorization: "Bearer " + this.token,
         },
       }
-    )
-      .then((response) => {
-        if (response.ok) return response.json();
-        response.text().then((text) => this.handleError(text));
-        return Promise.reject();
-      })
-      .catch((error) => {
-        console.log("Connection failed!");
-        ToastAndroid.show("Connection failed!", ToastAndroid.SHORT);
-        return Promise.reject();
-      });
+    ).then((response) => {
+      if (response.ok) return response.json();
+      response
+        .text()
+        .then((text) => this.handleError(text, "getGoingForEvent"));
+      return Promise.reject();
+    });
     return event;
   }
 
@@ -157,17 +149,13 @@ export class EventService extends Service {
           Authorization: "Bearer " + this.token,
         },
       }
-    )
-      .then((response) => {
-        if (response.ok) return response.json();
-        response.text().then((text) => this.handleError(text));
-        return Promise.reject();
-      })
-      .catch((error) => {
-        console.log("Connection failed!");
-        ToastAndroid.show("Connection failed!", ToastAndroid.SHORT);
-        return Promise.reject();
-      });
+    ).then((response) => {
+      if (response.ok) return response.json();
+      response
+        .text()
+        .then((text) => this.handleError(text, "deleteInterestedForEvent"));
+      return Promise.reject();
+    });
     return event;
   }
 
@@ -184,17 +172,13 @@ export class EventService extends Service {
           Authorization: "Bearer " + this.token,
         },
       }
-    )
-      .then((response) => {
-        if (response.ok) return response.json();
-        response.text().then((text) => this.handleError(text));
-        return Promise.reject();
-      })
-      .catch((error) => {
-        console.log("Connection failed!");
-        ToastAndroid.show("Connection failed!", ToastAndroid.SHORT);
-        return Promise.reject();
-      });
+    ).then((response) => {
+      if (response.ok) return response.json();
+      response
+        .text()
+        .then((text) => this.handleError(text, "deleteGoingForEvent"));
+      return Promise.reject();
+    });
     return event;
   }
 
@@ -205,17 +189,11 @@ export class EventService extends Service {
         "Content-Type": "application/json",
         Authorization: "Bearer " + this.token,
       },
-    })
-      .then((response) => {
-        if (response.ok) return response.json();
-        response.text().then((text) => this.handleError(text));
-        return Promise.reject();
-      })
-      .catch((error) => {
-        console.log("Connection failed!");
-        ToastAndroid.show("Connection failed!", ToastAndroid.SHORT);
-        return Promise.reject();
-      });
+    }).then((response) => {
+      if (response.ok) return response.json();
+      response.text().then((text) => this.handleError(text, "deleteEventById"));
+      return Promise.reject();
+    });
     return event;
   }
 
@@ -230,17 +208,27 @@ export class EventService extends Service {
         Authorization: "Bearer " + this.token,
       },
       body: JSON.stringify(newEvent),
-    })
-      .then((response) => {
-        if (response.ok) return response.json();
-        response.text().then((text) => this.handleError(text));
-        return Promise.reject();
-      })
-      .catch((error) => {
-        console.log("Connection failed!");
-        ToastAndroid.show("Connection failed!", ToastAndroid.SHORT);
-        return Promise.reject();
-      });
+    }).then((response) => {
+      if (response.ok) return response.json();
+      response.text().then((text) => this.handleError(text, "updateEventById"));
+      return Promise.reject();
+    });
+    return event;
+  }
+
+  async createEvent(newEvent: any): Promise<EventRespone | undefined> {
+    let event = await fetch(this.host, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + this.token,
+      },
+      body: JSON.stringify(newEvent),
+    }).then((response) => {
+      if (response.ok) return response.json();
+      response.text().then((text) => this.handleError(text, "createEvent"));
+      return Promise.reject();
+    });
     return event;
   }
 }

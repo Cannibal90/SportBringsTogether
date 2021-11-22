@@ -20,7 +20,7 @@ export class UserService extends Service {
       body: JSON.stringify(credentials),
     }).then((response) => {
       if (response.ok) return response.json();
-      response.text().then((text) => this.handleError(text));
+      response.text().then((text) => this.handleError(text, "loginUser"));
       return Promise.reject();
     });
     return user;
@@ -37,7 +37,7 @@ export class UserService extends Service {
       body: JSON.stringify(credentials),
     }).then((response) => {
       if (response.ok) return response.json();
-      response.text().then((text) => this.handleError(text));
+      response.text().then((text) => this.handleError(text, "registerUser"));
       return Promise.reject();
     });
     return user;

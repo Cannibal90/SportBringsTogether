@@ -9,6 +9,7 @@ export interface EventRequest {
   maxAttendants: number;
   lastTimeRegistration: Date;
   creatorId: number;
+  tags: string;
 }
 
 export interface EventDetails {
@@ -20,7 +21,6 @@ export interface EventDetails {
   endDate: Date;
   maxAttendants: number;
   lastTimeRegistration: Date;
-  tags: string;
 }
 
 export interface EventRespone {

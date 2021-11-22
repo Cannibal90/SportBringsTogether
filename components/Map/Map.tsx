@@ -33,6 +33,7 @@ const Map = (props: { match: any; history: any }) => {
   const [createLayer, setCreateLayer] = useState<boolean>(false);
   const [place, setPlace] = useState<string>("");
   const [coordinate, setCoordinate] = useState<any>();
+  const [createdEvent, setCreatedEvent] = useState<number>();
 
   const eventService = new EventService();
 
@@ -83,6 +84,10 @@ const Map = (props: { match: any; history: any }) => {
       console.log(mapRef.__lastRegion);
     }
   };
+  const handleCreateResponse = (response: number) => {
+    handleCreateEvent();
+    setCreatedEvent(response);
+  };
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((res) => {
@@ -125,6 +130,19 @@ const Map = (props: { match: any; history: any }) => {
       }
     });
   }, [props.match]);
+
+  useEffect(() => {
+    //pobieranie wszystkich w okolicy dla currentLocation
+    eventService.getNearbyEvents().then((response) => {
+      setEventMarkers(response);
+      if (createdEvent && response) {
+        const res = response.filter((event) => event.id === createdEvent)[0];
+        setSelectedEvent(res.id);
+        setOpenLayer(true);
+        setCreatedEvent(undefined);
+      }
+    });
+  }, [createdEvent]);
 
   return (
     <View style={styles.container}>
@@ -208,6 +226,7 @@ const Map = (props: { match: any; history: any }) => {
           onChange={handleCreateEvent}
           coordinates={coordinate}
           place={place}
+          handleCreateResponse={handleCreateResponse}
         />
       </View>
     </View>

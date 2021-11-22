@@ -183,7 +183,7 @@ export class EventService extends Service {
   }
 
   async deleteEventById(eventId: number): Promise<boolean | undefined> {
-    let event = await fetch(this.host + `idEvent=${eventId}`, {
+    let event = await fetch(this.host + `?idEvent=${eventId}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -201,7 +201,7 @@ export class EventService extends Service {
     eventId: number,
     newEvent: any
   ): Promise<boolean | undefined> {
-    let event = await fetch(this.host + `idEvent=${eventId}`, {
+    let event = await fetch(this.host + `?idEvent=${eventId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

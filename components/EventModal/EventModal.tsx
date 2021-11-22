@@ -9,6 +9,7 @@ import {
   SafeAreaView,
   ScrollView,
   TouchableOpacity,
+  ToastAndroid,
 } from "react-native";
 import { Link } from "react-router-native";
 import { LinearGradient } from "expo-linear-gradient";
@@ -17,27 +18,37 @@ import IconButton from "../IconButton/IconButton";
 import moment from "moment";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { EventRespone } from "../../models/EventInterfaces";
+import { EventService } from "../../services/EventService";
+import { store } from "../../store/store";
 const EventModal = (props: {
   visible: any;
   onChange: any;
   event: any;
   type: any;
+  onSave?: any;
 }) => {
   const [eventInfo, setEventInfo] = useState<any>({
-    title: props.event.eventDetails.title || "",
+    latitude: props.event.latitude,
+    longitude: props.event.longitude,
     description: props.event.eventDetails.description || "",
+    place: props.event.eventDetails.place || "",
+    title: props.event.eventDetails.title || "",
     startDate: new Date(...props.event.eventDetails.startDate) || new Date(),
     endDate: new Date(...props.event.eventDetails.endDate) || new Date(),
+    maxAttendants: props.event.eventDetails.maxAttendants || "",
     lastTimeRegistration:
       new Date(...props.event.eventDetails.lastTimeRegistration) || new Date(),
-    maxAttendants: props.event.eventDetails.maxAttendants || "",
-    place: props.event.eventDetails.place || "",
+    creatorId: props.event.creatorId,
+    tags: props.event.tags.toString(),
   });
   const [editable, setEditable] = useState<boolean>(false);
   const [showStartDate, setShowStartDate] = useState<boolean>(false);
   const [showEndDate, setShowEndDate] = useState<boolean>(false);
   const [showLastTimeRegistration, setShowLastTimeRegistration] =
     useState<boolean>(false);
+  const userId = store.getState().loggedReducer.id;
+
+  const eventService = new EventService();
 
   const handleChange = (item: any, name: any) => {
     if (name === "startDate") {
@@ -69,6 +80,30 @@ const EventModal = (props: {
   const handleShowLastTimeRegistration = () => {
     setShowLastTimeRegistration(!showLastTimeRegistration);
   };
+
+  const handleDeleteEvent = () => {
+    if (props.event.id)
+      eventService.deleteEventById(props.event.id).then((res) => {
+        props.onSave();
+      });
+  };
+
+  const handleEditEvent = () => {
+    if (props.event.id)
+      eventService.updateEventById(props.event.id, eventInfo).then((res) => {
+        ToastAndroid.show("Changes saved!", ToastAndroid.SHORT);
+        props.onSave();
+      });
+  };
+
+  const deleteGoing = () => {
+    eventService
+      .deleteGoingForEvent(props.event.id, userId)
+      .then((response) => {
+        props.onSave();
+      });
+  };
+
   return (
     <View style={styles.centeredView}>
       <Modal
@@ -202,18 +237,17 @@ const EventModal = (props: {
                 label="Place"
                 placeholder="Place"
                 value={eventInfo.place}
-                onChangeText={(text: any) => handleChange(text, "place")}
                 activeUnderlineColor={"#000000"}
-                disabled={!editable}
+                disabled={true}
               />
             </ScrollView>
             <View style={styles.buttonContainer}>
               {(props.type === "startpage" ||
                 props.type === "history" ||
                 props.type === "profile") && (
-                <Pressable onPress={() => props.onChange()}>
+                <TouchableOpacity onPress={() => props.onChange()}>
                   <IconButton iconName="check-circle" text="OK" />
-                </Pressable>
+                </TouchableOpacity>
               )}
 
               {props.type === "startpage" && (
@@ -226,30 +260,30 @@ const EventModal = (props: {
               )}
 
               {props.type === "participating" && (
-                <Pressable onPress={() => props.onChange()}>
+                <TouchableOpacity onPress={() => deleteGoing()}>
                   <IconButton iconName="trash" text="Discard" />
-                </Pressable>
+                </TouchableOpacity>
               )}
 
               {props.type === "profile" && !editable && (
-                <Pressable onPress={() => handleEditable()}>
+                <TouchableOpacity onPress={() => handleEditable()}>
                   <IconButton iconName="edit" text="Edit" />
-                </Pressable>
+                </TouchableOpacity>
               )}
               {props.type === "profile" && editable && (
-                <Pressable
+                <TouchableOpacity
                   onPress={() => {
-                    handleEditable();
+                    handleEditEvent();
                     props.onChange();
                   }}
                 >
                   <IconButton iconName="save" text="Save" />
-                </Pressable>
+                </TouchableOpacity>
               )}
               {props.type === "profile" && (
-                <Pressable onPress={() => props.onChange()}>
+                <TouchableOpacity onPress={() => handleDeleteEvent()}>
                   <IconButton iconName="trash" text="Delete" />
-                </Pressable>
+                </TouchableOpacity>
               )}
             </View>
           </LinearGradient>

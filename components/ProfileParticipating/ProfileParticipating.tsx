@@ -43,7 +43,13 @@ const ProfileParticipating = (props: { history: any }) => {
             renderItem={({ item, index }) => {
               return (
                 <View style={styles.eventListItemContainer}>
-                  <EventCard event={item} modalType="participating" />
+                  <EventCard
+                    event={item}
+                    modalType="participating"
+                    onSave={() => {
+                      fetchYourEvents();
+                    }}
+                  />
                 </View>
               );
             }}

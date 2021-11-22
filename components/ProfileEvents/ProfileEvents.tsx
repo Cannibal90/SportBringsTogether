@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Text, StyleSheet, View, FlatList } from "react-native";
 import { EventRespone } from "../../models/EventInterfaces";
 import { EventService } from "../../services/EventService";
+import { store } from "../../store/store";
 import EventCard from "../EventCard/EventCard";
 import TopContainer from "../TopContainer/TopContainer";
 
@@ -11,9 +12,11 @@ const ProfileEvents = (props: { history: any }) => {
   const eventService = new EventService();
 
   const fetchYourEvents = () => {
-    eventService.getUserCreatedEvents(1).then((response) => {
-      setYourEvents(response);
-    });
+    eventService
+      .getUserCreatedEvents(store.getState().loggedReducer.id)
+      .then((response) => {
+        setYourEvents(response);
+      });
   };
 
   useEffect(() => {
@@ -44,7 +47,13 @@ const ProfileEvents = (props: { history: any }) => {
             renderItem={({ item, index }) => {
               return (
                 <View style={styles.eventListItemContainer}>
-                  <EventCard event={item} modalType="profile" />
+                  <EventCard
+                    event={item}
+                    modalType="profile"
+                    onSave={() => {
+                      fetchYourEvents();
+                    }}
+                  />
                 </View>
               );
             }}

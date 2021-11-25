@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Text, View, StyleSheet, FlatList } from "react-native";
-import { EventRespone } from "../../models/EventInterfaces";
+import { EventRespone, InAreaRequest } from "../../models/EventInterfaces";
 import { EventService } from "../../services/EventService";
 import EventCard from "../EventCard/EventCard";
 import Logo from "../Logo/Logo";
@@ -12,24 +12,22 @@ const Startpage = () => {
 
   const eventService = new EventService();
 
-  const fetchNearbyEvents = () => {
-    eventService.getNearbyEvents().then((response) => {
+  const fetchNearbyEvents = (area: any) => {
+    eventService.getNearbyEvents(area).then((response) => {
       setNearbyEvents(response);
     });
   };
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((res) => {
-      const lat = res.coords.latitude;
-      const log = res.coords.longitude;
-      console.log(lat);
-      console.log(log);
-      //pobierz wydarzenia dla lat i long
+      const area = {
+        latitude: res.coords.latitude,
+        latitudeDelta: 0.07530116785195418,
+        longitude: res.coords.longitude,
+        longitudeDelta: 0.07530116785195418,
+      } as InAreaRequest;
+      fetchNearbyEvents(area);
     });
-  }, []);
-
-  useEffect(() => {
-    fetchNearbyEvents();
   }, []);
 
   return (
@@ -38,7 +36,7 @@ const Startpage = () => {
       <View style={styles.eventHeadlineContainer}>
         <Text style={styles.eventHeadline}>Events in nearbly area</Text>
       </View>
-      {nearbyEvents && nearbyEvents.length !== 0 && (
+      {nearbyEvents && nearbyEvents.length !== 0 ? (
         <View style={styles.eventListContainer}>
           <FlatList
             data={nearbyEvents}
@@ -52,6 +50,12 @@ const Startpage = () => {
               );
             }}
           />
+        </View>
+      ) : (
+        <View style={[styles.eventListContainer, { alignItems: "center" }]}>
+          <Text style={styles.eventHeadlineAny}>
+            Can't find any events in nearby area!
+          </Text>
         </View>
       )}
     </View>
@@ -79,6 +83,11 @@ const styles = StyleSheet.create({
     marginTop: 10,
     fontSize: 30,
     fontWeight: "700",
+  },
+  eventHeadlineAny: {
+    marginTop: 10,
+    color: "#908989",
+    fontSize: 20,
   },
 });
 

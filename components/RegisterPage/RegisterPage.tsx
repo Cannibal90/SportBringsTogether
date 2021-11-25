@@ -95,7 +95,6 @@ const RegisterPage = (props: { history: any }) => {
   };
 
   const fetchRegister = () => {
-    console.log("WESZŁo");
     userService
       .registerUser({
         firstName: credentials.firstname,
@@ -117,8 +116,6 @@ const RegisterPage = (props: { history: any }) => {
   };
 
   const handleRegister = () => {
-    console.log(checkValidation());
-    console.log(!checkEmptyFields());
     if (checkValidation() && !checkEmptyFields()) {
       fetchRegister();
     }

@@ -15,7 +15,6 @@ const MainContainer = () => {
 
   useEffect(() => {
     const unsubscribe = store.subscribe(() => {
-      console.log(store.getState().loggedReducer.logged);
       setLogged(store.getState().loggedReducer.logged);
     });
     return unsubscribe;

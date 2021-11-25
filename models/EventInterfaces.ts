@@ -33,3 +33,10 @@ export interface EventRespone {
   goingEvents: number[];
   eventInterestedUsers: number[];
 }
+
+export interface InAreaRequest {
+  latitude: number;
+  latitudeDelta: number;
+  longitude: number;
+  longitudeDelta: number;
+}

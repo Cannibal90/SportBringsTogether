@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -9,9 +9,9 @@ import {
 import Icon from "react-native-vector-icons/FontAwesome";
 import { LinearGradient } from "expo-linear-gradient";
 import TopContainer from "../TopContainer/TopContainer";
-import MapView, { Marker, Region } from "react-native-maps";
+import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
-import { EventRespone } from "../../models/EventInterfaces";
+import { EventRespone, InAreaRequest } from "../../models/EventInterfaces";
 import { EventService } from "../../services/EventService";
 import MapEventLayer from "../MapEventLayer/MapEventLayer";
 import MapCreateEvents from "../MapCreateEvent/MapCreateEvents";
@@ -81,7 +81,15 @@ const Map = (props: { match: any; history: any }) => {
 
   const handleSearchNearbyEvents = () => {
     if (mapRef) {
-      console.log(mapRef.__lastRegion);
+      const area = {
+        latitude: mapRef.__lastRegion.latitude,
+        latitudeDelta: mapRef.__lastRegion.latitudeDelta,
+        longitude: mapRef.__lastRegion.longitude,
+        longitudeDelta: mapRef.__lastRegion.longitudeDelta,
+      } as InAreaRequest;
+      eventService.getNearbyEvents(area).then((response) => {
+        setEventMarkers(response);
+      });
     }
   };
   const handleCreateResponse = (response: number) => {
@@ -107,7 +115,6 @@ const Map = (props: { match: any; history: any }) => {
 
       if (mapRef) {
         mapRef.animateToRegion(region);
-        console.log(mapRef.__lastRegion);
       }
 
       setDefaultLocation({
@@ -118,8 +125,21 @@ const Map = (props: { match: any; history: any }) => {
   }, [mapRef]);
 
   useEffect(() => {
-    //pobieranie wszystkich w okolicy dla currentLocation
-    eventService.getNearbyEvents().then((response) => {
+    const lat = props.match.params.lat
+      ? Number.parseFloat(props.match.params.lat)
+      : defaultLocation.latitude;
+    const log = props.match.params.lon
+      ? Number.parseFloat(props.match.params.lon)
+      : defaultLocation.longitude;
+
+    const region = {
+      latitude: lat,
+      longitude: log,
+      latitudeDelta: 0.07530116785195418,
+      longitudeDelta: 0.07530116785195418,
+    };
+
+    eventService.getNearbyEvents(region).then((response) => {
       setEventMarkers(response);
       if (props.match.params.id && response) {
         const res = response.filter(
@@ -132,16 +152,23 @@ const Map = (props: { match: any; history: any }) => {
   }, [props.match]);
 
   useEffect(() => {
-    //pobieranie wszystkich w okolicy dla currentLocation
-    eventService.getNearbyEvents().then((response) => {
-      setEventMarkers(response);
-      if (createdEvent && response) {
-        const res = response.filter((event) => event.id === createdEvent)[0];
-        setSelectedEvent(res.id);
-        setOpenLayer(true);
-        setCreatedEvent(undefined);
-      }
-    });
+    if (mapRef) {
+      const area = {
+        latitude: mapRef.__lastRegion.latitude,
+        latitudeDelta: mapRef.__lastRegion.latitudeDelta,
+        longitude: mapRef.__lastRegion.longitude,
+        longitudeDelta: mapRef.__lastRegion.longitudeDelta,
+      } as InAreaRequest;
+      eventService.getNearbyEvents(area).then((response) => {
+        setEventMarkers(response);
+        if (createdEvent && response) {
+          const res = response.filter((event) => event.id === createdEvent)[0];
+          setSelectedEvent(res.id);
+          setOpenLayer(true);
+          setCreatedEvent(undefined);
+        }
+      });
+    }
   }, [createdEvent]);
 
   return (

@@ -16,7 +16,7 @@ export class EventService extends Service {
       },
     }).then((response) => {
       if (response.ok) return response.json();
-      response.text().then((text) => this.handleError(text, "getNearbyEvents"));
+      response.text().then((text) => this.handleError(text, "getLast3Events"));
       return Promise.reject();
     });
     return events;
@@ -248,5 +248,44 @@ export class EventService extends Service {
       return Promise.reject();
     });
     return event;
+  }
+
+  async searchEvents(
+    id: number,
+    tags: string,
+    city: string
+  ): Promise<EventRespone[] | undefined> {
+    let searchString = this.prepareStringToSearch(id, tags, city);
+    let events = await fetch(this.host + "/search" + searchString, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + this.token,
+      },
+    }).then((response) => {
+      if (response.ok) return response.json();
+      response.text().then((text) => this.handleError(text, "createEvent"));
+      return Promise.reject();
+    });
+    return events;
+  }
+
+  prepareStringToSearch(id: number, tags: string, city: string) {
+    let searchStr = "";
+    let option = false;
+    if (id) {
+      searchStr = searchStr + `?idEvent=${id}`;
+      option = true;
+    }
+    if (city && city.length) {
+      searchStr = searchStr + (option ? `&` : `?`) + `?city=${city}`;
+      option = true;
+    }
+    if (tags && tags.length) {
+      searchStr = searchStr + (option ? `&` : `?`) + `?tags=${tags}`;
+      option = true;
+    }
+
+    return searchStr;
   }
 }

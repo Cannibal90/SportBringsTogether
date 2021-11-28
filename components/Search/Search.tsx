@@ -5,10 +5,11 @@ import {
   View,
   TouchableOpacity,
   ScrollView,
+  ToastAndroid,
 } from "react-native";
 import { Link } from "react-router-native";
 import TopContainer from "../TopContainer/TopContainer";
-import { HelperText, TextInput } from "react-native-paper";
+import { TextInput } from "react-native-paper";
 import { LinearGradient } from "expo-linear-gradient";
 import { EventService } from "../../services/EventService";
 import { EventRespone } from "../../models/EventInterfaces";
@@ -24,14 +25,13 @@ const Search = (props: { history: any }) => {
   const eventService = new EventService();
 
   const fetchNearbyEvents = () => {
-    eventService.getNearbyEvents().then((response) => {
-      setNearbyEvents(response);
-    });
+    eventService
+      .searchEvents(params.sharedID, params.tags, params.city)
+      .then((response) => {
+        setNearbyEvents(response);
+        ToastAndroid.show("You can see results!", ToastAndroid.SHORT);
+      });
   };
-
-  useEffect(() => {
-    fetchNearbyEvents();
-  }, []);
 
   const handleChange = (item: any, name: any) => {
     setParams({
@@ -75,6 +75,19 @@ const Search = (props: { history: any }) => {
               />
             </View>
           </View>
+          <TouchableOpacity
+            onPress={() => {
+              fetchNearbyEvents();
+            }}
+            style={{ alignItems: "center" }}
+          >
+            <LinearGradient
+              colors={["#FC8E67", "#FDCC4E"]}
+              style={styles.button}
+            >
+              <Text style={styles.buttonText}>Search</Text>
+            </LinearGradient>
+          </TouchableOpacity>
           <Link
             to={{
               pathname: "/search/results",
@@ -87,7 +100,7 @@ const Search = (props: { history: any }) => {
               colors={["#FC8E67", "#FDCC4E"]}
               style={styles.button}
             >
-              <Text style={styles.buttonText}>Search</Text>
+              <Text style={styles.buttonText}>See results</Text>
             </LinearGradient>
           </Link>
         </ScrollView>
@@ -126,6 +139,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     width: 250,
     height: 70,
+    marginVertical: 10,
   },
   buttonText: {
     textAlign: "center",

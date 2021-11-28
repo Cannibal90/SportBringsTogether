@@ -58,6 +58,7 @@ const Search = (props: { history: any }) => {
                 value={params.city}
                 onChangeText={(text: any) => handleChange(text, "city")}
                 activeUnderlineColor={"#000000"}
+                autoCapitalize="none"
               />
               <TextInput
                 style={styles.input}
@@ -65,6 +66,7 @@ const Search = (props: { history: any }) => {
                 value={params.tags}
                 onChangeText={(text: any) => handleChange(text, "tags")}
                 activeUnderlineColor={"#000000"}
+                autoCapitalize="none"
               />
               <TextInput
                 style={styles.input}
@@ -72,6 +74,7 @@ const Search = (props: { history: any }) => {
                 value={params.sharedID}
                 onChangeText={(text: any) => handleChange(text, "sharedID")}
                 activeUnderlineColor={"#000000"}
+                autoCapitalize="none"
               />
             </View>
           </View>

@@ -33,3 +33,14 @@ export interface JwtResponse {
   id: number;
   email: string;
 }
+
+export interface UserDto {
+  id: number;
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  city: string;
+  dateOfBirth: Date;
+  badges: string;
+}

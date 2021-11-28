@@ -5,6 +5,7 @@ import {
   View,
   TouchableOpacity,
   ScrollView,
+  ToastAndroid,
 } from "react-native";
 import { Link } from "react-router-native";
 import TopContainer from "../TopContainer/TopContainer";
@@ -16,28 +17,33 @@ import {
 } from "../../validators/validators";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import moment from "moment";
+import { UserDto } from "../../models/UserInterfaces";
+import { UserService } from "../../services/UserService";
+import { store } from "../../store/store";
 
 const ProfileEdit = (props: { history: any }) => {
-  const [credentials, setCredentials] = useState<any>({
-    firstname: "",
-    lastname: "",
+  const [credentials, setCredentials] = useState<UserDto>({
+    id: 0,
     email: "",
     password: "",
-    retype: "",
+    firstName: "",
+    lastName: "",
     city: "",
     dateOfBirth: new Date(),
+    badges: "",
   });
 
   const [validationMessages, setValidationMessages] = useState<any>({
-    firstname: "",
-    lastname: "",
     email: "",
     password: "",
-    retype: "",
+    firstName: "",
+    lastName: "",
     city: "",
     dateOfBirth: "",
   });
   const [showDate, setShowDate] = useState<boolean>(false);
+
+  const userService = new UserService();
 
   const handleChange = (item: any, name: any) => {
     let check = validateMinThreeSigns(item);
@@ -63,6 +69,61 @@ const ProfileEdit = (props: { history: any }) => {
     setShowDate(!showDate);
   };
 
+  const checkValidation = () => {
+    return Boolean(
+      validationMessages.firstName === "" &&
+        validationMessages.lastName === "" &&
+        validationMessages.email === "" &&
+        validationMessages.password === "" &&
+        validationMessages.city === "" &&
+        validationMessages.dateOfBirth.toString() === ""
+    );
+  };
+  const checkEmptyFields = () => {
+    return Boolean(
+      !credentials.firstName.length ||
+        !credentials.lastName.length ||
+        !credentials.email.length ||
+        !credentials.city.length ||
+        !credentials.dateOfBirth.toString().length
+    );
+  };
+
+  const fetchUserById = () => {
+    userService
+      .getUserById(store.getState().loggedReducer.id)
+      .then((response) => {
+        if (response) {
+          setCredentials(response);
+          setValidationMessages({
+            email: "",
+            password: "",
+            firstName: "",
+            lastName: "",
+            city: "",
+            dateOfBirth: "",
+          });
+        }
+      });
+  };
+
+  const saveUserDetails = () => {
+    if (checkValidation() && !checkEmptyFields()) {
+      userService.updateUser(credentials).then((response) => {
+        if (response) {
+          setCredentials(response);
+          ToastAndroid.show("Changes saved!", ToastAndroid.SHORT);
+        }
+      });
+    } else {
+      ToastAndroid.show("Check passed data", ToastAndroid.SHORT);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserById();
+  }, []);
+
   return (
     <View style={styles.container}>
       <TopContainer
@@ -79,23 +140,44 @@ const ProfileEdit = (props: { history: any }) => {
                 style={styles.input}
                 label="Email"
                 value={credentials.email}
-                onChangeText={(text: any) => handleChange(text, "city")}
+                onChangeText={(text: any) => handleChange(text, "email")}
                 activeUnderlineColor={"#000000"}
               />
+              <HelperText type="error" visible={true} style={styles.errorText}>
+                {validationMessages.email}
+              </HelperText>
               <TextInput
                 style={styles.input}
                 label="Firstname"
-                value={credentials.firstname}
-                onChangeText={(text: any) => handleChange(text, "firstname")}
+                value={credentials.firstName}
+                onChangeText={(text: any) => handleChange(text, "firstName")}
                 activeUnderlineColor={"#000000"}
               />
+              <HelperText type="error" visible={true} style={styles.errorText}>
+                {validationMessages.firstName}
+              </HelperText>
               <TextInput
                 style={styles.input}
                 label="Surname"
-                value={credentials.lastname}
-                onChangeText={(text: any) => handleChange(text, "lastname")}
+                value={credentials.lastName}
+                onChangeText={(text: any) => handleChange(text, "lastName")}
                 activeUnderlineColor={"#000000"}
               />
+              <HelperText type="error" visible={true} style={styles.errorText}>
+                {validationMessages.lastName}
+              </HelperText>
+              <TextInput
+                style={styles.input}
+                label="Password"
+                value={credentials.password}
+                onChangeText={(text: any) => handleChange(text, "password")}
+                activeUnderlineColor={"#000000"}
+                secureTextEntry={true}
+                autoCapitalize="none"
+              />
+              <HelperText type="error" visible={true} style={styles.errorText}>
+                {validationMessages.password}
+              </HelperText>
               {showDate && (
                 <DateTimePicker
                   value={credentials.dateOfBirth || new Date()}
@@ -125,6 +207,9 @@ const ProfileEdit = (props: { history: any }) => {
                   activeUnderlineColor={"#000000"}
                 />
               </TouchableOpacity>
+              <HelperText type="error" visible={true} style={styles.errorText}>
+                {validationMessages.dateOfBirth}
+              </HelperText>
               <TextInput
                 style={styles.input}
                 label="City"
@@ -132,25 +217,14 @@ const ProfileEdit = (props: { history: any }) => {
                 onChangeText={(text: any) => handleChange(text, "city")}
                 activeUnderlineColor={"#000000"}
               />
-              <TextInput
-                style={styles.input}
-                label="Password"
-                value={credentials.password}
-                onChangeText={(text: any) => handleChange(text, "password")}
-                activeUnderlineColor={"#000000"}
-              />
-              <TextInput
-                style={styles.input}
-                label="Retype password"
-                value={credentials.retype}
-                onChangeText={(text: any) => handleChange(text, "retype")}
-                activeUnderlineColor={"#000000"}
-              />
+              <HelperText type="error" visible={true} style={styles.errorText}>
+                {validationMessages.city}
+              </HelperText>
             </View>
           </View>
           <TouchableOpacity
             onPress={() => {
-              console.log("SAVE");
+              saveUserDetails();
             }}
             style={{ alignItems: "center", marginVertical: 20 }}
           >
@@ -178,7 +252,7 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     width: 320,
-    height: 600,
+    height: 500,
     borderRadius: 20,
   },
   inputWrapper: {
@@ -187,7 +261,7 @@ const styles = StyleSheet.create({
     textAlign: "left",
   },
   input: {
-    marginVertical: 10,
+    // marginVertical: 10,
     fontWeight: "700",
     backgroundColor: "rgba(196, 196, 196, 0.28)",
     borderRadius: 10,
@@ -195,7 +269,7 @@ const styles = StyleSheet.create({
   },
   button: {
     borderRadius: 20,
-    width: 250,
+    width: 280,
     height: 70,
   },
   buttonText: {
@@ -203,6 +277,12 @@ const styles = StyleSheet.create({
     fontSize: 31,
     fontWeight: "700",
     color: "#ffffff",
+  },
+  errorText: {
+    width: "100%",
+    paddingLeft: 0,
+    textAlign: "left",
+    // marginBottom: 10,
   },
 });
 

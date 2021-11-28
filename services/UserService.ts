@@ -76,4 +76,19 @@ export class UserService extends Service {
     });
     return user;
   }
+
+  async getUserBadges(id: number): Promise<string | undefined> {
+    let user = await fetch(this.host + `/badges/${id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + this.token,
+      },
+    }).then((response) => {
+      if (response.ok) return response.text();
+      response.text().then((text) => this.handleError(text, "getUserBadges"));
+      return Promise.reject();
+    });
+    return user;
+  }
 }

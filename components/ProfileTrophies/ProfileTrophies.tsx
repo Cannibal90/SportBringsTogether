@@ -1,29 +1,43 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Text, StyleSheet, View } from "react-native";
 import TopContainer from "../TopContainer/TopContainer";
 import Icon from "react-native-vector-icons/FontAwesome5";
+import { UserService } from "../../services/UserService";
+import { store } from "../../store/store";
 
 const ProfileTrophies = (props: { history: any }) => {
   const [level, setLevel] = useState<string>("");
 
+  const userService = new UserService();
+
   const checkBeginer = () => {
-    if (level === "beginer" || level === "mid" || level === "senior") {
+    if (level === "Beginner" || level === "Mid" || level === "Senior") {
       return true;
     }
     return false;
   };
   const checkMid = () => {
-    if (level === "mid" || level === "senior") {
+    if (level === "Mid" || level === "Senior") {
       return true;
     }
     return false;
   };
   const checkSenior = () => {
-    if (level === "senior") {
+    if (level === "Senior") {
       return true;
     }
     return false;
   };
+
+  useEffect(() => {
+    userService
+      .getUserBadges(store.getState().loggedReducer.id)
+      .then((response) => {
+        if (response) {
+          setLevel(response);
+        }
+      });
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -44,9 +58,19 @@ const ProfileTrophies = (props: { history: any }) => {
             ]}
           >
             {checkBeginer() ? (
-              <Icon name="check-square" size={40} color="#00f320" />
+              <Icon
+                name="check-square"
+                size={40}
+                color="#00f320"
+                style={styles.iconsLeft}
+              />
             ) : (
-              <Icon name="lock" size={40} color="rgba(196,196,196,1)" />
+              <Icon
+                name="lock"
+                size={40}
+                color="rgba(196,196,196,1)"
+                style={styles.iconsLeft}
+              />
             )}
             <View style={styles.textContainer}>
               <Text
@@ -67,6 +91,7 @@ const ProfileTrophies = (props: { history: any }) => {
               </Text>
             </View>
             <Icon
+              style={{ marginLeft: 70 }}
               name="glass-cheers"
               size={40}
               color={checkBeginer() ? "#00f320" : "rgba(196,196,196,1)"}
@@ -82,9 +107,19 @@ const ProfileTrophies = (props: { history: any }) => {
             ]}
           >
             {checkMid() ? (
-              <Icon name="check-square" size={40} color="#00f320" />
+              <Icon
+                name="check-square"
+                size={40}
+                color="#00f320"
+                style={styles.iconsLeft}
+              />
             ) : (
-              <Icon name="lock" size={40} color="rgba(196,196,196,1)" />
+              <Icon
+                name="lock"
+                size={40}
+                color="rgba(196,196,196,1)"
+                style={styles.iconsLeft}
+              />
             )}
             <View style={styles.textContainer}>
               <Text
@@ -105,6 +140,7 @@ const ProfileTrophies = (props: { history: any }) => {
               </Text>
             </View>
             <Icon
+              style={{ marginLeft: 110 }}
               name="trophy"
               size={40}
               color={checkMid() ? "#e2f104" : "rgba(196,196,196,1)"}
@@ -122,9 +158,19 @@ const ProfileTrophies = (props: { history: any }) => {
             ]}
           >
             {checkSenior() ? (
-              <Icon name="check-square" size={40} color="#00f320" />
+              <Icon
+                name="check-square"
+                size={40}
+                color="#00f320"
+                style={styles.iconsLeft}
+              />
             ) : (
-              <Icon name="lock" size={40} color="rgba(196,196,196,1)" />
+              <Icon
+                name="lock"
+                size={40}
+                color="rgba(196,196,196,1)"
+                style={styles.iconsLeft}
+              />
             )}
             <View style={styles.textContainer}>
               <Text
@@ -155,7 +201,6 @@ const ProfileTrophies = (props: { history: any }) => {
     </View>
   );
 };
-// user-graduate
 
 const styles = StyleSheet.create({
   container: {
@@ -174,7 +219,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-around",
+    justifyContent: "flex-start",
   },
   rectangleText: {
     color: "#000000",
@@ -191,6 +236,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginLeft: -20,
     marginTop: 15,
+  },
+  iconsLeft: {
+    marginLeft: 10,
+    marginRight: 40,
   },
 });
 

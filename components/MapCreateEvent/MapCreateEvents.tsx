@@ -82,7 +82,6 @@ const MapCreateEvents = (props: {
   };
 
   const handleCreateEvent = () => {
-    console.log(JSON.stringify(event, null, 2));
     eventService.createEvent(event).then((response) => {
       if (response) props.handleCreateResponse(response.id);
     });

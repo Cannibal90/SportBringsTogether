@@ -7,10 +7,17 @@ import {
   TouchableOpacity,
 } from "react-native";
 import EventModal from "../EventModal/EventModal";
+import { eventCardImages } from "./EventCardImages";
 
 const EventCard = (props: { event: any; modalType: any; onSave?: any }) => {
   const [visible, setVisible] = useState<boolean>(false);
-  const link = require(`../../images/running.jpg`);
+  const filteredEventImages = eventCardImages.filter((ev) => {
+    if (ev.names.includes(props.event.eventDetails.title.toLowerCase()))
+      return true;
+  });
+  const link = filteredEventImages.length
+    ? filteredEventImages[0].url
+    : eventCardImages[16].url;
 
   const onModalVisibilityChange = () => {
     setVisible(!visible);

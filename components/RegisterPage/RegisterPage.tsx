@@ -11,8 +11,6 @@ import { LinearGradient } from "expo-linear-gradient";
 import { HelperText, TextInput } from "react-native-paper";
 import Logo from "../Logo/Logo";
 import IconButton from "../IconButton/IconButton";
-import { store } from "../../store/store";
-import { logIn } from "../../store/actions/LoggedAction";
 import {
   validateEmail,
   validateMinThreeSigns,
@@ -21,6 +19,7 @@ import {
 import DateTimePicker from "@react-native-community/datetimepicker";
 import moment from "moment";
 import { UserService } from "../../services/UserService";
+import { Link } from "react-router-native";
 
 const RegisterPage = (props: { history: any }) => {
   const [credentials, setCredentials] = useState<any>({

@@ -1,6 +1,8 @@
 import React from "react";
-import { StyleSheet, Image } from "react-native";
+import { StyleSheet, Image, TouchableOpacity } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
+import { Link } from "react-router-native";
+import { store } from "../../store/store";
 
 const Logo = () => {
   return (
@@ -8,7 +10,18 @@ const Logo = () => {
       colors={["#FC8E67", "#FDCC4E"]}
       style={styles.iconContainer}
     >
-      <Image source={require("../../images/Logo.png")} style={styles.logo} />
+      {!store.getState().loggedReducer.logged && (
+        <Link to="/" component={TouchableOpacity}>
+          <Image
+            source={require("../../images/Logo.png")}
+            style={styles.logo}
+          />
+        </Link>
+      )}
+
+      {store.getState().loggedReducer.logged && (
+        <Image source={require("../../images/Logo.png")} style={styles.logo} />
+      )}
     </LinearGradient>
   );
 };

@@ -1,3 +1,4 @@
+import moment from "moment";
 import React, { useEffect, useState } from "react";
 import {
   Text,
@@ -38,6 +39,11 @@ const EventCard = (props: { event: any; modalType: any; onSave?: any }) => {
             <Text style={styles.eventText}>
               {props.event.eventDetails.place}
             </Text>
+            <Text style={styles.eventText}>
+              {moment(new Date(...props.event.eventDetails.startDate)).format(
+                "HH:mm DD-MM-YYYY"
+              )}
+            </Text>
           </View>
         </ImageBackground>
       </TouchableOpacity>
@@ -61,9 +67,9 @@ const styles = StyleSheet.create({
   },
   circle: {
     marginLeft: -30,
-    width: 135,
+    width: 200,
     height: "100%",
-    borderRadius: 1000,
+    borderRadius: 30,
     backgroundColor:
       "linear-gradient(73.71deg, rgba(0, 0, 0, 0.65) 29.86%, rgba(0, 0, 0, 0) 115.69%);",
     justifyContent: "center",

@@ -149,6 +149,7 @@ const styles = StyleSheet.create({
     width: 250,
     height: 70,
     marginVertical: 10,
+    justifyContent: "center",
   },
   buttonText: {
     textAlign: "center",

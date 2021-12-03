@@ -289,6 +289,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     width: 280,
     height: 70,
+    justifyContent: "center",
   },
   buttonText: {
     textAlign: "center",

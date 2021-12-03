@@ -53,7 +53,8 @@ const ProfileEdit = (props: { history: any }) => {
     } else if (name === "dateOfBirth") {
       handleShowDate();
     }
-
+    console.log(item);
+    console.log(name);
     setCredentials({
       ...credentials,
       [name]: item,
@@ -89,39 +90,56 @@ const ProfileEdit = (props: { history: any }) => {
     );
   };
 
-  const fetchUserById = () => {
-    userService
-      .getUserById(store.getState().loggedReducer.id)
-      .then((response) => {
-        if (response) {
-          setCredentials(response);
-          setValidationMessages({
-            email: "",
-            password: "",
-            firstName: "",
-            lastName: "",
-            city: "",
-            dateOfBirth: "",
-          });
-        }
-      });
-  };
-
   const saveUserDetails = () => {
-    if (checkValidation() && !checkEmptyFields()) {
-      userService.updateUser(credentials).then((response) => {
-        if (response) {
-          setCredentials(response);
-          ToastAndroid.show("Changes saved!", ToastAndroid.SHORT);
-        }
-      });
+    if (checkValidation()) {
+      console.log(credentials);
+      userService
+        .updateUser(credentials)
+        .then((response) => {
+          if (response) {
+            setCredentials(response);
+            ToastAndroid.show("Changes saved!", ToastAndroid.SHORT);
+          }
+        })
+        .catch(() => {
+          ToastAndroid.show(
+            "Something goes wrong, try again...",
+            ToastAndroid.SHORT
+          );
+        });
     } else {
       ToastAndroid.show("Check passed data", ToastAndroid.SHORT);
     }
   };
 
   useEffect(() => {
-    fetchUserById();
+    let isSubscribed = true;
+    userService
+      .getUserById(store.getState().loggedReducer.id)
+      .then((response) => {
+        if (response) {
+          if (isSubscribed) {
+            setCredentials(response);
+            setValidationMessages({
+              email: "",
+              password: "",
+              firstName: "",
+              lastName: "",
+              city: "",
+              dateOfBirth: "",
+            });
+          }
+        }
+      })
+      .catch(() => {
+        ToastAndroid.show(
+          "Something goes wrong, try again...",
+          ToastAndroid.SHORT
+        );
+      });
+    return () => {
+      isSubscribed = false;
+    };
   }, []);
 
   return (

@@ -7,6 +7,7 @@ import {
   TouchableWithoutFeedback,
   ScrollView,
   TouchableOpacity,
+  ToastAndroid,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 
@@ -82,9 +83,17 @@ const MapCreateEvents = (props: {
   };
 
   const handleCreateEvent = () => {
-    eventService.createEvent(event).then((response) => {
-      if (response) props.handleCreateResponse(response.id);
-    });
+    eventService
+      .createEvent(event)
+      .then((response) => {
+        if (response) props.handleCreateResponse(response.id);
+      })
+      .catch(() => {
+        ToastAndroid.show(
+          "Something goes wrong, try again...",
+          ToastAndroid.SHORT
+        );
+      });
   };
 
   return (

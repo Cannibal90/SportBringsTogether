@@ -52,7 +52,7 @@ const Map = (props: { match: any; history: any }) => {
         })
         .catch((error) => {
           ToastAndroid.show(
-            "Something goes wrong, try again",
+            "Something goes wrong, try again handleAddMarker",
             ToastAndroid.SHORT
           );
         })
@@ -64,6 +64,9 @@ const Map = (props: { match: any; history: any }) => {
 
   const handleShowLayer = () => {
     setOpenLayer(!openLayer);
+    if (selectedEvent) {
+      props.history.push("/map");
+    }
   };
 
   const handleCreateEvent = () => {
@@ -87,9 +90,17 @@ const Map = (props: { match: any; history: any }) => {
         longitude: mapRef.__lastRegion.longitude,
         longitudeDelta: mapRef.__lastRegion.longitudeDelta,
       } as InAreaRequest;
-      eventService.getNearbyEvents(area).then((response) => {
-        setEventMarkers(response);
-      });
+      eventService
+        .getNearbyEvents(area)
+        .then((response) => {
+          setEventMarkers(response);
+        })
+        .catch(() => {
+          ToastAndroid.show(
+            "Something goes wrong, try again...handleSearchNearbyEvents",
+            ToastAndroid.SHORT
+          );
+        });
     }
   };
   const handleCreateResponse = (response: number) => {
@@ -98,6 +109,7 @@ const Map = (props: { match: any; history: any }) => {
   };
 
   useEffect(() => {
+    let isSubscribed = true;
     navigator.geolocation.getCurrentPosition((res) => {
       const lat = props.match.params.lat
         ? Number.parseFloat(props.match.params.lat)
@@ -113,7 +125,7 @@ const Map = (props: { match: any; history: any }) => {
         longitudeDelta: 0.0421,
       };
 
-      if (mapRef) {
+      if (mapRef && isSubscribed) {
         mapRef.animateToRegion(region);
       }
 
@@ -122,9 +134,13 @@ const Map = (props: { match: any; history: any }) => {
         longitude: log,
       });
     });
+    return () => {
+      isSubscribed = false;
+    };
   }, [mapRef]);
 
   useEffect(() => {
+    let isSubscribed = true;
     const lat = props.match.params.lat
       ? Number.parseFloat(props.match.params.lat)
       : defaultLocation.latitude;
@@ -133,25 +149,45 @@ const Map = (props: { match: any; history: any }) => {
       : defaultLocation.longitude;
 
     const region = {
-      latitude: lat,
-      longitude: log,
+      latitude: lat ? lat : 51.759445,
+      longitude: log ? log : 19.457216,
       latitudeDelta: 0.07530116785195418,
       longitudeDelta: 0.07530116785195418,
     };
+    console.log("REGION");
+    console.log(JSON.stringify(region, null, 2));
+    eventService
+      .getNearbyEvents(region)
+      .then((response) => {
+        if (isSubscribed) {
+          setEventMarkers(response);
+          if (props.match.params.id && response) {
+            const res = response.filter(
+              (event) => event.id === Number.parseInt(props.match.params.id)
+            )[0];
+            if (res) {
+              setSelectedEvent(res.id);
+              setOpenLayer(true);
+            }
+          }
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        ToastAndroid.show(
+          "Something goes wrong, try again...useEffect",
+          ToastAndroid.SHORT
+        );
+      });
 
-    eventService.getNearbyEvents(region).then((response) => {
-      setEventMarkers(response);
-      if (props.match.params.id && response) {
-        const res = response.filter(
-          (event) => event.id === Number.parseInt(props.match.params.id)
-        )[0];
-        setSelectedEvent(res.id);
-        setOpenLayer(true);
-      }
-    });
+    return () => {
+      isSubscribed = false;
+    };
   }, [props.match]);
 
   useEffect(() => {
+    let isSubscribed = true;
+
     if (mapRef) {
       const area = {
         latitude: mapRef.__lastRegion.latitude,
@@ -159,16 +195,32 @@ const Map = (props: { match: any; history: any }) => {
         longitude: mapRef.__lastRegion.longitude,
         longitudeDelta: mapRef.__lastRegion.longitudeDelta,
       } as InAreaRequest;
-      eventService.getNearbyEvents(area).then((response) => {
-        setEventMarkers(response);
-        if (createdEvent && response) {
-          const res = response.filter((event) => event.id === createdEvent)[0];
-          setSelectedEvent(res.id);
-          setOpenLayer(true);
-          setCreatedEvent(undefined);
-        }
-      });
+      eventService
+        .getNearbyEvents(area)
+        .then((response) => {
+          if (isSubscribed) {
+            setEventMarkers(response);
+            if (createdEvent && response) {
+              const res = response.filter(
+                (event) => event.id === createdEvent
+              )[0];
+              setSelectedEvent(res.id);
+              setOpenLayer(true);
+              setCreatedEvent(undefined);
+            }
+          }
+        })
+        .catch(() => {
+          ToastAndroid.show(
+            "Something goes wrong, try again...useEffect2",
+            ToastAndroid.SHORT
+          );
+        });
     }
+
+    return () => {
+      isSubscribed = false;
+    };
   }, [createdEvent]);
 
   return (

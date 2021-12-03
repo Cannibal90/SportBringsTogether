@@ -256,6 +256,7 @@ export class EventService extends Service {
     city: string
   ): Promise<EventRespone[] | undefined> {
     let searchString = this.prepareStringToSearch(id, tags, city);
+    console.log(searchString);
     let events = await fetch(this.host + "/search" + searchString, {
       method: "GET",
       headers: {
@@ -264,7 +265,7 @@ export class EventService extends Service {
       },
     }).then((response) => {
       if (response.ok) return response.json();
-      response.text().then((text) => this.handleError(text, "createEvent"));
+      response.text().then((text) => this.handleError(text, "searchEvent"));
       return Promise.reject();
     });
     return events;

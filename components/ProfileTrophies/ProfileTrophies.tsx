@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Text, StyleSheet, View } from "react-native";
+import { Text, StyleSheet, View, ToastAndroid } from "react-native";
 import TopContainer from "../TopContainer/TopContainer";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { UserService } from "../../services/UserService";
@@ -30,13 +30,23 @@ const ProfileTrophies = (props: { history: any }) => {
   };
 
   useEffect(() => {
+    let isSubscribed = true;
     userService
       .getUserBadges(store.getState().loggedReducer.id)
       .then((response) => {
-        if (response) {
+        if (response && isSubscribed) {
           setLevel(response);
         }
+      })
+      .catch(() => {
+        ToastAndroid.show(
+          "Something goes wrong, try again...",
+          ToastAndroid.SHORT
+        );
       });
+    return () => {
+      isSubscribed = false;
+    };
   }, []);
 
   return (

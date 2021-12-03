@@ -30,6 +30,12 @@ const Search = (props: { history: any }) => {
       .then((response) => {
         setNearbyEvents(response);
         ToastAndroid.show("You can see results!", ToastAndroid.SHORT);
+      })
+      .catch(() => {
+        ToastAndroid.show(
+          "Something goes wrong, try again...",
+          ToastAndroid.SHORT
+        );
       });
   };
 

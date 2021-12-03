@@ -101,6 +101,12 @@ const EventModal = (props: {
       .deleteGoingForEvent(props.event.id, userId)
       .then((response) => {
         props.onSave();
+      })
+      .catch(() => {
+        ToastAndroid.show(
+          "Something goes wrong, try again...",
+          ToastAndroid.SHORT
+        );
       });
   };
 

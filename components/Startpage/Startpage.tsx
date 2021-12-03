@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Text, View, StyleSheet, FlatList } from "react-native";
+import { Text, View, StyleSheet, FlatList, ToastAndroid } from "react-native";
 import { EventRespone, InAreaRequest } from "../../models/EventInterfaces";
 import { EventService } from "../../services/EventService";
 import EventCard from "../EventCard/EventCard";
@@ -12,13 +12,8 @@ const Startpage = () => {
 
   const eventService = new EventService();
 
-  const fetchNearbyEvents = (area: any) => {
-    eventService.getNearbyEvents(area).then((response) => {
-      setNearbyEvents(response);
-    });
-  };
-
   useEffect(() => {
+    let isSubscribed = true;
     navigator.geolocation.getCurrentPosition((res) => {
       const area = {
         latitude: res.coords.latitude,
@@ -26,8 +21,22 @@ const Startpage = () => {
         longitude: res.coords.longitude,
         longitudeDelta: 0.07530116785195418,
       } as InAreaRequest;
-      fetchNearbyEvents(area);
+
+      eventService
+        .getNearbyEvents(area)
+        .then((response) => {
+          if (isSubscribed) setNearbyEvents(response);
+        })
+        .catch(() => {
+          ToastAndroid.show(
+            "Something goes wrong, try again...",
+            ToastAndroid.SHORT
+          );
+        });
     });
+    return () => {
+      isSubscribed = false;
+    };
   }, []);
 
   return (

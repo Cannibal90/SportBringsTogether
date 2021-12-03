@@ -28,40 +28,78 @@ const MapEventLayer = (props: {
   const eventService = new EventService();
 
   useEffect(() => {
-    getEventById();
-  }, [props.eventId]);
-
-  const getEventById = () => {
+    let isSubscribed = true;
     if (props.eventId)
       eventService
         .getEventById(Number.parseInt(props.eventId))
         .then((response) => {
-          setEvent(response);
+          if (isSubscribed) setEvent(response);
+        })
+        .catch(() => {
+          ToastAndroid.show(
+            "Something goes wrong, try again...",
+            ToastAndroid.SHORT
+          );
         });
-  };
+    return () => {
+      isSubscribed = false;
+    };
+  }, [props.eventId]);
 
   const getGoing = () => {
-    eventService.getGoingForEvent(event.id, userId).then((response) => {
-      setEvent(response);
-    });
+    eventService
+      .getGoingForEvent(event.id, userId)
+      .then((response) => {
+        setEvent(response);
+      })
+      .catch(() => {
+        ToastAndroid.show(
+          "Something goes wrong, try again...",
+          ToastAndroid.SHORT
+        );
+      });
   };
 
   const deleteGoing = () => {
-    eventService.deleteGoingForEvent(event.id, userId).then((response) => {
-      setEvent(response);
-    });
+    eventService
+      .deleteGoingForEvent(event.id, userId)
+      .then((response) => {
+        setEvent(response);
+      })
+      .catch(() => {
+        ToastAndroid.show(
+          "Something goes wrong, try again...",
+          ToastAndroid.SHORT
+        );
+      });
   };
 
   const getInterested = () => {
-    eventService.getInterestedForEvent(event.id, userId).then((response) => {
-      setEvent(response);
-    });
+    eventService
+      .getInterestedForEvent(event.id, userId)
+      .then((response) => {
+        setEvent(response);
+      })
+      .catch(() => {
+        ToastAndroid.show(
+          "Something goes wrong, try again...",
+          ToastAndroid.SHORT
+        );
+      });
   };
 
   const deleteInterested = () => {
-    eventService.deleteInterestedForEvent(event.id, userId).then((response) => {
-      setEvent(response);
-    });
+    eventService
+      .deleteInterestedForEvent(event.id, userId)
+      .then((response) => {
+        setEvent(response);
+      })
+      .catch(() => {
+        ToastAndroid.show(
+          "Something goes wrong, try again...",
+          ToastAndroid.SHORT
+        );
+      });
   };
 
   const copyIdToClipboard = () => {

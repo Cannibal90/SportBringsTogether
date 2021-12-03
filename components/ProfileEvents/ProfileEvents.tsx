@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Text, StyleSheet, View, FlatList } from "react-native";
+import { Text, StyleSheet, View, FlatList, ToastAndroid } from "react-native";
 import { EventRespone } from "../../models/EventInterfaces";
 import { EventService } from "../../services/EventService";
 import { store } from "../../store/store";
@@ -12,15 +12,37 @@ const ProfileEvents = (props: { history: any }) => {
   const eventService = new EventService();
 
   const fetchYourEvents = () => {
+    let id = store.getState().loggedReducer.id || 0;
     eventService
-      .getUserCreatedEvents(store.getState().loggedReducer.id)
+      .getUserCreatedEvents(id)
       .then((response) => {
         setYourEvents(response);
+      })
+      .catch(() => {
+        ToastAndroid.show(
+          "Something goes wrong, try again...",
+          ToastAndroid.SHORT
+        );
       });
   };
 
   useEffect(() => {
-    fetchYourEvents();
+    let isSubscribed = true;
+    let id = store.getState().loggedReducer.id || 0;
+    eventService
+      .getUserCreatedEvents(id)
+      .then((response) => {
+        if (isSubscribed) setYourEvents(response);
+      })
+      .catch(() => {
+        ToastAndroid.show(
+          "Something goes wrong, try again...",
+          ToastAndroid.SHORT
+        );
+      });
+    return () => {
+      isSubscribed = false;
+    };
   }, []);
 
   return (

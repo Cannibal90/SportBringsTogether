@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Text, StyleSheet, View, FlatList } from "react-native";
+import { Text, StyleSheet, View, FlatList, ToastAndroid } from "react-native";
 import { EventRespone } from "../../models/EventInterfaces";
 import { EventService } from "../../services/EventService";
+import { store } from "../../store/store";
 import EventCard from "../EventCard/EventCard";
 import TopContainer from "../TopContainer/TopContainer";
 
@@ -10,14 +11,23 @@ const ProfileHistory = (props: { history: any }) => {
 
   const eventService = new EventService();
 
-  const fetchYourEvents = () => {
-    eventService.getUserHistoryEvents(1).then((response) => {
-      setYourEvents(response);
-    });
-  };
-
   useEffect(() => {
-    fetchYourEvents();
+    let id = store.getState().loggedReducer.id || 0;
+    let isSubscribed = true;
+    eventService
+      .getUserHistoryEvents(id)
+      .then((response) => {
+        if (isSubscribed) setYourEvents(response);
+      })
+      .catch(() => {
+        ToastAndroid.show(
+          "Something goes wrong, try again...",
+          ToastAndroid.SHORT
+        );
+      });
+    return () => {
+      isSubscribed = false;
+    };
   }, []);
 
   return (

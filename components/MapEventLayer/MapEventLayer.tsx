@@ -105,6 +105,7 @@ const MapEventLayer = (props: {
   const copyIdToClipboard = () => {
     Clipboard.setString(props.eventId.toString());
     ToastAndroid.show("Event ID copied to clipboard!", ToastAndroid.SHORT);
+    console.log(new Date(...event.eventDetails.lastTimeRegistration));
   };
 
   return (
@@ -131,9 +132,9 @@ const MapEventLayer = (props: {
               </Text>
               <Text style={styles.eventHeadlineTitleText}>
                 Last time to register:{" "}
-                {moment(
-                  new Date(...event.eventDetails.lastTimeRegistration)
-                ).format("YYYY-MM-DD HH:mm")}
+                {moment(new Date(...event.eventDetails.lastTimeRegistration))
+                  .subtract(1, "months")
+                  .format("YYYY-MM-DD HH:mm")}
               </Text>
 
               <View style={styles.eventHeadlineLatLogContainer}>
@@ -210,13 +211,13 @@ const MapEventLayer = (props: {
                     <Text style={styles.rectangleText}>Durration time</Text>
                     <Icon name="clock-o" size={30} color="#000000" />
                     <Text style={styles.rectangleText}>
-                      {moment(new Date(...event.eventDetails.startDate)).format(
-                        "HH:mm"
-                      )}{" "}
+                      {moment(new Date(...event.eventDetails.startDate))
+                        .subtract(1, "months")
+                        .format("HH:mm")}{" "}
                       -{" "}
-                      {moment(new Date(...event.eventDetails.endDate)).format(
-                        "HH:mm"
-                      )}
+                      {moment(new Date(...event.eventDetails.endDate))
+                        .subtract(1, "months")
+                        .format("HH:mm")}
                     </Text>
                   </View>
                   <View

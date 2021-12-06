@@ -253,16 +253,18 @@ export class EventService extends Service {
   async searchEvents(
     id: number,
     tags: string,
-    city: string
+    city: string,
+    dates: any
   ): Promise<EventRespone[] | undefined> {
     let searchString = this.prepareStringToSearch(id, tags, city);
     console.log(searchString);
     let events = await fetch(this.host + "/search" + searchString, {
-      method: "GET",
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: "Bearer " + this.token,
       },
+      body: JSON.stringify(dates),
     }).then((response) => {
       if (response.ok) return response.json();
       response.text().then((text) => this.handleError(text, "searchEvent"));

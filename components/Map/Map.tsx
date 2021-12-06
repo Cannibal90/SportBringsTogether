@@ -141,6 +141,45 @@ const Map = (props: { match: any; history: any }) => {
 
   useEffect(() => {
     let isSubscribed = true;
+    navigator.geolocation.getCurrentPosition((res) => {
+      const lat = props.match.params.lat
+        ? Number.parseFloat(props.match.params.lat)
+        : res.coords.latitude;
+      const log = props.match.params.lon
+        ? Number.parseFloat(props.match.params.lon)
+        : res.coords.longitude;
+
+      const region = {
+        latitude: lat,
+        longitude: log,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+      };
+
+      if (mapRef && isSubscribed) {
+        eventService
+          .getNearbyEvents(region)
+          .then((response) => {
+            if (isSubscribed) {
+              setEventMarkers(response);
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+            ToastAndroid.show(
+              "Something goes wrong, try again...useEffect",
+              ToastAndroid.SHORT
+            );
+          });
+      }
+    });
+    return () => {
+      isSubscribed = false;
+    };
+  }, [defaultLocation]);
+
+  useEffect(() => {
+    let isSubscribed = true;
     const lat = props.match.params.lat
       ? Number.parseFloat(props.match.params.lat)
       : defaultLocation.latitude;
@@ -154,8 +193,7 @@ const Map = (props: { match: any; history: any }) => {
       latitudeDelta: 0.07530116785195418,
       longitudeDelta: 0.07530116785195418,
     };
-    console.log("REGION");
-    console.log(JSON.stringify(region, null, 2));
+
     eventService
       .getNearbyEvents(region)
       .then((response) => {
@@ -195,6 +233,7 @@ const Map = (props: { match: any; history: any }) => {
         longitude: mapRef.__lastRegion.longitude,
         longitudeDelta: mapRef.__lastRegion.longitudeDelta,
       } as InAreaRequest;
+
       eventService
         .getNearbyEvents(area)
         .then((response) => {
@@ -212,7 +251,7 @@ const Map = (props: { match: any; history: any }) => {
         })
         .catch(() => {
           ToastAndroid.show(
-            "Something goes wrong, try again...useEffect2",
+            "Something goes wrong, try again...",
             ToastAndroid.SHORT
           );
         });

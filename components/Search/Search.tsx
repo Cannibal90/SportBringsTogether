@@ -22,7 +22,9 @@ const Search = (props: { history: any }) => {
     tags: "",
     sharedID: "",
     startDate: new Date(),
+    changedStart: false,
     endDate: new Date(),
+    changedEnd: false,
   });
   const [nearbyEvents, setNearbyEvents] = useState<EventRespone[]>();
   const [showStartDate, setShowStartDate] = useState<boolean>(false);
@@ -31,8 +33,19 @@ const Search = (props: { history: any }) => {
   const eventService = new EventService();
 
   const fetchNearbyEvents = () => {
+    let timeReq = {
+      start: null,
+      end: null,
+    };
+
+    if (params.changedStart) {
+      timeReq.start = params.startDate;
+    }
+    if (params.changedEnd) {
+      timeReq.end = params.endDate;
+    }
     eventService
-      .searchEvents(params.sharedID, params.tags, params.city)
+      .searchEvents(params.sharedID, params.tags, params.city, timeReq)
       .then((response) => {
         setNearbyEvents(response);
         ToastAndroid.show("You can see results!", ToastAndroid.SHORT);
@@ -48,14 +61,24 @@ const Search = (props: { history: any }) => {
   const handleChange = (item: any, name: any) => {
     if (name === "startDate") {
       handleShowStartDate();
+      setParams({
+        ...params,
+        startDate: item,
+        changedStart: true,
+      });
     } else if (name === "endDate") {
       handleShowEndDate();
+      setParams({
+        ...params,
+        endDate: item,
+        changedEnd: true,
+      });
+    } else {
+      setParams({
+        ...params,
+        [name]: item,
+      });
     }
-
-    setParams({
-      ...params,
-      [name]: item,
-    });
   };
 
   const handleShowStartDate = () => {
@@ -126,7 +149,9 @@ const Search = (props: { history: any }) => {
                     moment(params.startDate).format("YYYY-MM-DD") ===
                     moment(new Date()).format("YYYY-MM-DD")
                       ? ""
-                      : moment(params.startDate).format("YYYY-MM-DD")
+                      : moment(params.startDate)
+                          .subtract(1, "months")
+                          .format("YYYY-MM-DD")
                   }
                   disabled={true}
                   activeUnderlineColor={"#000000"}

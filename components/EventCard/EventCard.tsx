@@ -40,9 +40,9 @@ const EventCard = (props: { event: any; modalType: any; onSave?: any }) => {
               {props.event.eventDetails.place}
             </Text>
             <Text style={styles.eventText}>
-              {moment(new Date(...props.event.eventDetails.startDate)).format(
-                "HH:mm DD-MM-YYYY"
-              )}
+              {moment(new Date(...props.event.eventDetails.startDate))
+                .subtract(1, "months")
+                .format("HH:mm DD-MM-YYYY")}
             </Text>
           </View>
         </ImageBackground>

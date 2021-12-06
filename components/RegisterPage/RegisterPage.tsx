@@ -229,7 +229,9 @@ const RegisterPage = (props: { history: any }) => {
                   moment(credentials.dateOfBirth).format("YYYY-MM-DD") ===
                   moment(new Date()).format("YYYY-MM-DD")
                     ? ""
-                    : moment(credentials.dateOfBirth).format("YYYY-MM-DD")
+                    : moment(credentials.dateOfBirth)
+                        .subtract(1, "months")
+                        .format("YYYY-MM-DD")
                 }
                 disabled={true}
                 activeUnderlineColor={"#000000"}

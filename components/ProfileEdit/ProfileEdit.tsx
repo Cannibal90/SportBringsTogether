@@ -7,7 +7,6 @@ import {
   ScrollView,
   ToastAndroid,
 } from "react-native";
-import { Link } from "react-router-native";
 import TopContainer from "../TopContainer/TopContainer";
 import { HelperText, TextInput } from "react-native-paper";
 import { LinearGradient } from "expo-linear-gradient";
@@ -53,8 +52,7 @@ const ProfileEdit = (props: { history: any }) => {
     } else if (name === "dateOfBirth") {
       handleShowDate();
     }
-    console.log(item);
-    console.log(name);
+
     setCredentials({
       ...credentials,
       [name]: item,
@@ -68,6 +66,19 @@ const ProfileEdit = (props: { history: any }) => {
 
   const handleShowDate = () => {
     setShowDate(!showDate);
+  };
+
+  const handleSetResponse = (response: UserDto) => {
+    setCredentials({
+      id: response.id,
+      email: response.email,
+      password: response.password,
+      firstName: response.firstName,
+      lastName: response.lastName,
+      city: response.city,
+      dateOfBirth: new Date(...response.dateOfBirth),
+      badges: response.badges,
+    });
   };
 
   const checkValidation = () => {
@@ -92,12 +103,11 @@ const ProfileEdit = (props: { history: any }) => {
 
   const saveUserDetails = () => {
     if (checkValidation()) {
-      console.log(credentials);
       userService
         .updateUser(credentials)
         .then((response) => {
           if (response) {
-            setCredentials(response);
+            handleSetResponse(response);
             ToastAndroid.show("Changes saved!", ToastAndroid.SHORT);
           }
         })
@@ -119,7 +129,7 @@ const ProfileEdit = (props: { history: any }) => {
       .then((response) => {
         if (response) {
           if (isSubscribed) {
-            setCredentials(response);
+            handleSetResponse(response);
             setValidationMessages({
               email: "",
               password: "",

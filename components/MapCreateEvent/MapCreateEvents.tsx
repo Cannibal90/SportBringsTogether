@@ -86,6 +86,7 @@ const MapCreateEvents = (props: {
     eventService
       .createEvent(event)
       .then((response) => {
+        console.log("Response: " + JSON.stringify(response, null, 2));
         if (response) props.handleCreateResponse(response.id);
       })
       .catch(() => {

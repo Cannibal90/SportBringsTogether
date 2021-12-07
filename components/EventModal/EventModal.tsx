@@ -256,14 +256,15 @@ const EventModal = (props: {
                 </TouchableOpacity>
               )}
 
-              {props.type === "startpage" && (
-                <Link
-                  component={TouchableOpacity}
-                  to={`/map/${props.event.id}/${props.event.latitude}/${props.event.longitude}`}
-                >
-                  <IconButton iconName="map" text="Go to Map" />
-                </Link>
-              )}
+              {props.type === "startpage" &&
+                new Date() <= new Date(props.event.eventDetails.startDate) && (
+                  <Link
+                    component={TouchableOpacity}
+                    to={`/map/${props.event.id}/${props.event.latitude}/${props.event.longitude}`}
+                  >
+                    <IconButton iconName="map" text="Go to Map" />
+                  </Link>
+                )}
 
               {props.type === "participating" && (
                 <TouchableOpacity onPress={() => deleteGoing()}>

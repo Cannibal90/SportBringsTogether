@@ -146,10 +146,9 @@ const Search = (props: { history: any }) => {
                   style={{ fontWeight: "700" }}
                   label="Start date"
                   value={
-                    moment(params.startDate).format("YYYY-MM-DD") ===
-                    moment(new Date()).format("YYYY-MM-DD")
-                      ? ""
-                      : moment(params.startDate).format("YYYY-MM-DD")
+                    params.changedStart
+                      ? moment(params.startDate).format("YYYY-MM-DD")
+                      : ""
                   }
                   disabled={true}
                   activeUnderlineColor={"#000000"}
@@ -158,7 +157,7 @@ const Search = (props: { history: any }) => {
 
               {showEndDate && (
                 <DateTimePicker
-                  value={params.startDate || new Date()}
+                  value={params.endDate || new Date()}
                   mode="date"
                   display="default"
                   onChange={(event: any, selectedDate: any) => {
@@ -176,10 +175,9 @@ const Search = (props: { history: any }) => {
                   style={{ fontWeight: "700" }}
                   label="End date"
                   value={
-                    moment(params.endDate).format("YYYY-MM-DD") ===
-                    moment(new Date()).format("YYYY-MM-DD")
-                      ? ""
-                      : moment(params.endDate).format("YYYY-MM-DD")
+                    params.changedEnd
+                      ? moment(params.endDate).format("YYYY-MM-DD")
+                      : ""
                   }
                   disabled={true}
                   activeUnderlineColor={"#000000"}

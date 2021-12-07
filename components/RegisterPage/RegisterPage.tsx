@@ -24,7 +24,7 @@ import { Link } from "react-router-native";
 const RegisterPage = (props: { history: any }) => {
   const [credentials, setCredentials] = useState<any>({
     firstname: "",
-    lastname: "",
+    lastName: "",
     email: "",
     password: "",
     retype: "",
@@ -33,7 +33,7 @@ const RegisterPage = (props: { history: any }) => {
   });
   const [validationMessages, setValidationMessages] = useState<any>({
     firstname: "",
-    lastname: "",
+    lastName: "",
     email: "",
     password: "",
     retype: "",
@@ -73,7 +73,7 @@ const RegisterPage = (props: { history: any }) => {
   const checkValidation = () => {
     return Boolean(
       validationMessages.firstname === "" &&
-        validationMessages.lastname === "" &&
+        validationMessages.lastName === "" &&
         validationMessages.email === "" &&
         validationMessages.password === "" &&
         validationMessages.retype === "" &&
@@ -84,7 +84,7 @@ const RegisterPage = (props: { history: any }) => {
   const checkEmptyFields = () => {
     return Boolean(
       !credentials.firstname.length ||
-        !credentials.lastname.length ||
+        !credentials.lastName.length ||
         !credentials.email.length ||
         !credentials.password.length ||
         !credentials.retype.length ||
@@ -151,13 +151,13 @@ const RegisterPage = (props: { history: any }) => {
             <TextInput
               style={styles.input}
               label="Lastname"
-              value={credentials.lastname}
-              onChangeText={(text: any) => handleChange(text, "lastname")}
+              value={credentials.lastName}
+              onChangeText={(text: any) => handleChange(text, "lastName")}
               activeUnderlineColor={"#000000"}
               autoCapitalize="none"
             />
             <HelperText type="error" visible={true} style={styles.errorText}>
-              {validationMessages.lastname}
+              {validationMessages.lastName}
             </HelperText>
             <TextInput
               style={styles.input}
@@ -229,9 +229,7 @@ const RegisterPage = (props: { history: any }) => {
                   moment(credentials.dateOfBirth).format("YYYY-MM-DD") ===
                   moment(new Date()).format("YYYY-MM-DD")
                     ? ""
-                    : moment(credentials.dateOfBirth)
-                        .subtract(1, "months")
-                        .format("YYYY-MM-DD")
+                    : moment(credentials.dateOfBirth).format("YYYY-MM-DD")
                 }
                 disabled={true}
                 activeUnderlineColor={"#000000"}

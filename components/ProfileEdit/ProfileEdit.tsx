@@ -76,7 +76,7 @@ const ProfileEdit = (props: { history: any }) => {
       firstName: response.firstName,
       lastName: response.lastName,
       city: response.city,
-      dateOfBirth: new Date(...response.dateOfBirth),
+      dateOfBirth: new Date(response.dateOfBirth),
       badges: response.badges,
     });
   };

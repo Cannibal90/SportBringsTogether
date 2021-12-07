@@ -20,8 +20,7 @@ const SearchResults = (props: { history: any; location: any }) => {
   const handleAscending = () => {
     let newSearch = searchEvents.sort(function (a, b) {
       let val =
-        new Date(...b.eventDetails.startDate) -
-        new Date(...a.eventDetails.startDate);
+        new Date(b.eventDetails.startDate) - new Date(a.eventDetails.startDate);
       return val;
     });
     setSearchEvents(newSearch);
@@ -31,8 +30,7 @@ const SearchResults = (props: { history: any; location: any }) => {
   const handleDescending = () => {
     let newSearch = searchEvents.sort((a, b) => {
       let val =
-        new Date(...a.eventDetails.startDate) -
-        new Date(...b.eventDetails.startDate);
+        new Date(a.eventDetails.startDate) - new Date(b.eventDetails.startDate);
       return val;
     });
     setSearchEvents(newSearch);

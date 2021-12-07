@@ -33,11 +33,11 @@ const EventModal = (props: {
     description: props.event.eventDetails.description || "",
     place: props.event.eventDetails.place || "",
     title: props.event.eventDetails.title || "",
-    startDate: new Date(...props.event.eventDetails.startDate) || new Date(),
-    endDate: new Date(...props.event.eventDetails.endDate) || new Date(),
+    startDate: props.event.eventDetails.startDate || new Date(),
+    endDate: props.event.eventDetails.endDate || new Date(),
     maxAttendants: props.event.eventDetails.maxAttendants || "",
     lastTimeRegistration:
-      new Date(...props.event.eventDetails.lastTimeRegistration) || new Date(),
+      props.event.eventDetails.lastTimeRegistration || new Date(),
     creatorId: props.event.creatorId,
     tags: props.event.tags.toString(),
   });

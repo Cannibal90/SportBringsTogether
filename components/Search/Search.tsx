@@ -149,9 +149,7 @@ const Search = (props: { history: any }) => {
                     moment(params.startDate).format("YYYY-MM-DD") ===
                     moment(new Date()).format("YYYY-MM-DD")
                       ? ""
-                      : moment(params.startDate)
-                          .subtract(1, "months")
-                          .format("YYYY-MM-DD")
+                      : moment(params.startDate).format("YYYY-MM-DD")
                   }
                   disabled={true}
                   activeUnderlineColor={"#000000"}

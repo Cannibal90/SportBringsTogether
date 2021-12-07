@@ -257,7 +257,6 @@ export class EventService extends Service {
     dates: any
   ): Promise<EventRespone[] | undefined> {
     let searchString = this.prepareStringToSearch(id, tags, city);
-    console.log(searchString);
     let events = await fetch(this.host + "/search" + searchString, {
       method: "POST",
       headers: {
